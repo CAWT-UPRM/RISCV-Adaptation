@@ -2,6 +2,7 @@
 module ID_EX_reg (
     input logic clk, 
     input logic reset, 
+    input logic flush,
     input logic branch,
     input logic mem_read,
     input logic memtoreg,
@@ -11,7 +12,6 @@ module ID_EX_reg (
     input logic jal,
     input logic jalr,
     input logic [1:0] alu_op,
-    input logic ex_mem_taken,
     input logic [31:0] pc_if_id,
     input logic [31:0] instruction_if_id,
     input logic [63:0] big_immediate,
@@ -40,13 +40,14 @@ module ID_EX_reg (
     output logic [63:0] big_immediate_id_ex,
     output logic [4:0] reg_dest_id_ex,
     output logic [4:0] reg2_id_ex,
+    output logic [4:0] reg1_id_ex,
     output logic [2:0] funct3_id_ex,
     output logic [6:0] funct7_id_ex
     
 );
 
     always_ff @(posedge clk or posedge reset) begin
-        if (reset) begin
+        if (reset || flush) begin
             pc_id_ex <= 32'b0;
             id_ex_branch <= 1'b0;
             id_ex_mem_read <= 1'b0;
@@ -62,6 +63,7 @@ module ID_EX_reg (
             big_immediate_id_ex <= 64'b0;
             reg_dest_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
+            reg1_id_ex <= 5'b0;
             funct3_id_ex <= 3'b0;
             funct7_id_ex <= 7'b0;
 
@@ -81,6 +83,7 @@ module ID_EX_reg (
             data_read2_id_ex <= data_read2; // Read data 2 from registers
             big_immediate_id_ex <= big_immediate; // Immediate value
             reg_dest_id_ex <= reg_dest; // Destination register
+            reg1_id_ex <= reg1; // First source register
             reg2_id_ex <= reg2; // Second source register
             funct3_id_ex <= funct3; // funct3 bits
             funct7_id_ex <= funct7; // funct7 bits

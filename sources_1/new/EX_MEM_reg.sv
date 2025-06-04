@@ -8,15 +8,9 @@ module EX_MEM_reg (
     input logic id_ex_reg_write,
     input logic id_ex_jal,
     input logic id_ex_jalr,
-    input logic id_ex_branch,
     input logic [31:0] alu_result,
     input logic [31:0] data_read2_id_ex,
-    input logic [31:0] branch_target,
     input logic [4:0] reg_dest_id_ex,
-    input logic zero,
-    input logic ex_branch_taken,
-    input logic ex_jump_taken,
-    input logic [31:0] ex_chosen_target,
     input logic [31:0] ex_link_address,
 
     output logic ex_mem_memread,
@@ -25,14 +19,9 @@ module EX_MEM_reg (
     output logic ex_mem_regwrite,
     output logic ex_mem_jal,
     output logic ex_mem_jalr,
-    output logic ex_mem_branch,
     output logic [31:0] ex_mem_alu_result,
     output logic [31:0] ex_mem_data_read2,
-    output logic [31:0] ex_mem_branch_target,
     output logic [4:0] ex_mem_reg_dest,
-    output logic ex_mem_zero,
-    output logic ex_mem_taken_reg,
-    output logic [31:0] ex_mem_next_pc_reg,
     output logic [31:0] ex_mem_link_address_reg
 );
 
@@ -44,14 +33,9 @@ module EX_MEM_reg (
             ex_mem_regwrite <= 1'b0;
             ex_mem_jal <= 1'b0;
             ex_mem_jalr <= 1'b0;
-            ex_mem_branch <= 1'b0;
             ex_mem_alu_result <= 32'b0;
             ex_mem_data_read2 <= 32'b0;
-            ex_mem_branch_target <= 32'b0;
             ex_mem_reg_dest <= 5'b0;
-            ex_mem_zero <= 1'b0;
-            ex_mem_taken_reg <= 1'b0;
-            ex_mem_next_pc_reg <= 32'b0;
             ex_mem_link_address_reg <= 32'b0;
 
         end else begin
@@ -61,14 +45,9 @@ module EX_MEM_reg (
             ex_mem_regwrite <= id_ex_reg_write; // Register write control signal
             ex_mem_jal <= id_ex_jal; // JAL control signal
             ex_mem_jalr <= id_ex_jalr; // JALR control signal
-            ex_mem_branch <= id_ex_branch; // Branch control signal
             ex_mem_alu_result <= alu_result; // ALU result
             ex_mem_data_read2 <= data_read2_id_ex; // Data read from registers for store instructions
-            ex_mem_branch_target <= branch_target; // Branch target address
             ex_mem_reg_dest <= reg_dest_id_ex; // Destination register for write back
-            ex_mem_zero <= zero; // Zero flag from ALU
-            ex_mem_taken_reg <= ex_branch_taken || ex_jump_taken; // Taken if branch or jump is taken
-            ex_mem_next_pc_reg <= ex_chosen_target; // Next PC for branch or jump
             ex_mem_link_address_reg <= ex_link_address; // Link address for JALR
         end
     end

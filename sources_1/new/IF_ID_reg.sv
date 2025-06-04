@@ -2,7 +2,8 @@
 module IF_ID_reg (
     input logic clk, 
     input logic reset, 
-    input logic ex_mem_taken,
+    input logic flush,
+    input logic if_id_write,
     input logic [31:0] instruction,
     input logic [31:0] pc,
     
@@ -15,7 +16,7 @@ module IF_ID_reg (
         if (reset) begin
             pc_if_id <= 32'b0;
             instruction_if_id <= 32'b0;
-        end else if (ex_mem_taken) begin
+        end else if (flush || !if_id_write) begin
             pc_if_id <= 32'b0;
             instruction_if_id <= 32'h00000013; // NOP instruction
         end else begin
