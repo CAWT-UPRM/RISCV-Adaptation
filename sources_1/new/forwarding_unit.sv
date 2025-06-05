@@ -16,14 +16,18 @@ module Forward (
         // Ex hazards 
         if(ex_mem_reg_write && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs1)) begin
             forward_a = 2'b10;
-        end else if ((ex_mem_reg_write && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs2))) begin
+        end 
+        
+        if ((ex_mem_reg_write && (ex_mem_rd != 0) && (ex_mem_rd == id_ex_rs2))) begin
             forward_b = 2'b10;
         end
 
         // Mem hazards
         if(mem_wb_reg_write && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs1)) begin
             forward_a = 2'b01;
-        end else if (mem_wb_reg_write && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs2)) begin
+        end
+
+        if (mem_wb_reg_write && (mem_wb_rd != 0) && (mem_wb_rd == id_ex_rs2)) begin
             forward_b = 2'b01;
         end
     end

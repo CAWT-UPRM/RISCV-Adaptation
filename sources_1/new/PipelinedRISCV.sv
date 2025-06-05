@@ -251,6 +251,7 @@ module RISCV_PIPELINED (
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
     logic [31:0] ex_mem_alu_result, ex_mem_data_read2;
     logic [4:0] ex_mem_reg_dest;
+    logic [2:0] ex_mem_funct3; 
 
     logic [31:0] ex_mem_link_address_reg;
 
@@ -267,6 +268,7 @@ module RISCV_PIPELINED (
         .data_read2_id_ex(data_read2_id_ex), 
         .reg_dest_id_ex(reg_dest_id_ex), 
         .ex_link_address(pc_id_ex + 32'h4),
+        .funct3(funct3_id_ex), // For store or load instructions
 
         // Outputs
         .ex_mem_memread(ex_mem_memread),
@@ -280,7 +282,8 @@ module RISCV_PIPELINED (
         .ex_mem_reg_dest(ex_mem_reg_dest),
         
         // Link address for JALR
-        .ex_mem_link_address_reg(ex_mem_link_address_reg)
+        .ex_mem_link_address_reg(ex_mem_link_address_reg),
+        .ex_mem_funct3(ex_mem_funct3) // Function code for memory operations
     );
 
     // ------MEMORY STAGE------
@@ -293,6 +296,7 @@ module RISCV_PIPELINED (
         .clk(clk),
         .address(ex_mem_alu_result), // Address for data memory is the ALU result
         .write_data(ex_mem_data_read2), // Data to write is from read data 2
+        .funct3(ex_mem_funct3),
         .mem_write(ex_mem_memwrite), // Memory write control signal
         .mem_read(ex_mem_memread), // Memory read control signal
         .read_data(memory_data_read) // Data to write back to registers
