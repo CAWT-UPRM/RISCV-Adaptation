@@ -7,6 +7,7 @@ module IM_stimulus;
     logic [31:0] instruction;
     
     InstructionMemory im (
+        .clk(clk),
         .instruction_adress(pc),
         .instruction(instruction)
     );

@@ -4,30 +4,19 @@
 
 
 module InstructionMemory (
-    input logic [31:0] instruction_adress, // program counter
     input logic clk, 
-    input logic rst,
+    input logic [31:0] instruction_adress, // program counter
     output logic [31:0] instruction
 );
-    logic [31:0] memory [0:255]; // 256 words of 32 bits each
+
     logic [31:0] instruction_reg; // Register to hold the current instruction
 
-    // adress coming into the instruction memory is typically a byte address, but our memory is indexed in words, not bytes.
-    // Since instructions are 32 bits (4 byte), we only need to use the upper bits of the address to index into our memory. 
-    // address[9:2] shifts the address right by 2 bits, effectively dividing it by 4, which gives us the word index.
-    
-    initial begin     
-        //$readmemh("instructions.txt", memory); // Load instructions from a hex file (for hex)
-        $readmemb("instructions.txt", memory); // Load instructions from a text file (for binary)
-    end
-
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            instruction_reg <= 32'h0000_0013 ; // Reset instruction to zero
-        end else begin
-            instruction_reg <= memory[instruction_adress[9:2]]; // Use bits 31:2 for addressing
-        end
-    end
+    Instruction_Memory im (
+        .clka(clk), // Clock input
+        .ena(1'b1), // Enable the memory
+        .addra(instruction_adress[9:2]), // Address input, dropping bottom 2 bits for word addressing
+        .douta(instruction_reg) // Data output for read operations
+    );
 
     assign instruction = instruction_reg;
     

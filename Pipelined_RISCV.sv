@@ -2,10 +2,11 @@
 
 module RISCV_Single_Cycle (
     input logic clk,
-    input logic reset
+    input logic reset,
+    output logic led
 );
 
-    logic [31:0] pc = 32'b0;
+    logic [31:0] pc;
     logic [31:0] next_pc;
     logic [31:0] instruction;
     logic [31:0] data_read1, data_read2;
@@ -13,7 +14,7 @@ module RISCV_Single_Cycle (
     logic [63:0] big_immediate;
     logic [31:0] memory_data_read; // read data wire
 
-    logic branch, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, zero;
+    logic branch, bne, blt, bge, auipc, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, zero;
     logic [1:0] alu_op;
     logic [31:0] alu_result; 
     logic [3:0] alu_control;
@@ -27,7 +28,6 @@ module RISCV_Single_Cycle (
 
     InstructionMemory im (
         .clk(clk),
-        .rst(reset),
         .instruction_adress(pc), 
         .instruction(instruction)
     );
@@ -43,8 +43,11 @@ module RISCV_Single_Cycle (
     );
 
     Control control_unit (
-        .instruction(instruction[6:0]),
+        .opcode(instruction[6:0]),
         .branch(branch),
+        .bne(bne),
+        .blt(blt),
+        .bge(bge),
         .mem_read(mem_read),
         .memtoreg(memtoreg),
         .alu_op(alu_op),
@@ -52,14 +55,16 @@ module RISCV_Single_Cycle (
         .alu_src(alu_src),
         .reg_write(reg_write),
         .jal(jal),
-        .jalr(jalr)
+        .jalr(jalr),
+        .auipc(auipc)
     );
 
     ALU_control alu_control_unit (
         .alu_op(alu_op),
         .funct3(instruction[14:12]),
+        .alu_src(alu_src),
         .funct7(instruction[30]),
-        .funct7_mult(instruction[25]), // For multiplication
+        .funct7_mac(instruction[25]), // For multiplication
         .alu_control(alu_control)
     );
 
@@ -69,8 +74,8 @@ module RISCV_Single_Cycle (
     );
 
     ALU alu (
-        .a(data_read1),
-        .b(alu_src ? big_immediate : data_read2), // Use immediate value if alu_src is set
+        .a(auipc ? pc : data_read1),
+        .b(alu_src ? big_immediate[31:0] : data_read2), // Use immediate value if alu_src is set
         .alu_control(alu_control),
         .result(alu_result),
         .zero(zero) 
@@ -78,10 +83,12 @@ module RISCV_Single_Cycle (
 
     branch branch_unit (
         .pc(pc),
-        .instruction(instruction),
         .read_data1(data_read1),
         .big_immediate(big_immediate),
         .branch(branch),
+        .bne(bne),
+        .blt(blt),
+        .bge(bge),
         .zero(zero),
         .jal(jal),
         .jalr(jalr),
@@ -95,6 +102,7 @@ module RISCV_Single_Cycle (
         .clk(clk),
         .address(alu_result), // Address for data memory is the ALU result
         .write_data(data_read2), // Data to write is from read data 2
+        .funct3(instruction[14:12]), // funct3 bits for memory operations
         .mem_write(mem_write), // Memory write control signal
         .mem_read(mem_read), // Memory read control signal
         .read_data(memory_data_read) // Data to write back to registers
@@ -111,4 +119,7 @@ module RISCV_Single_Cycle (
             data_to_write = alu_result; 
         end
     end
+    
+    assign led = alu_result[0];
+    
 endmodule
