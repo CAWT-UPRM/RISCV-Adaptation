@@ -58,6 +58,14 @@ module RISCV_PIPELINED (
     logic [31:0] pc ;
     logic [31:0] next_pc;
     logic [31:0] instruction;
+
+    always_comb begin
+        if(ex_taken) begin
+            next_pc = ex_next_pc;
+        end else begin
+            next_pc = pc + 32'h4; 
+        end
+    end
         
     ProgramCounter pc_i (
         .clk(clk),
@@ -233,7 +241,7 @@ module RISCV_PIPELINED (
     Forward forwarding_unit ( 
         .id_ex_rs1(reg1_id_ex), 
         .id_ex_rs2(reg2_id_ex), 
-        .id_ex_rd(reg_dest_id_ex),
+        .id_ex_rs3(reg_dest_id_ex),
         .ex_mem_rd(ex_mem_reg_dest), 
         .mem_wb_rd(mem_wb_reg_dest), 
         .ex_mem_reg_write(ex_mem_regwrite), 
@@ -247,7 +255,7 @@ module RISCV_PIPELINED (
     // ------EXECUTE STAGE------
     logic [3:0] alu_control;
     logic [31:0] alu_result;
-    logic zero, mac_enable, mac_done;
+    logic zero;
     logic [31:0] alu_input, alu_input2;
 
     ALU_control alu_control_unit (
@@ -256,10 +264,9 @@ module RISCV_PIPELINED (
         .alu_src(id_ex_alu_src), 
         .funct7(funct7_id_ex[5]), // For R-type instructions, bit 30
         .funct7_mac(funct7_id_ex[0]), // For mac, bit 25
-        .mac_enable(mac_enable),
         .alu_control(alu_control)
-        );
-        
+    );
+
     logic [31:0] alu_operand1, alu_operand2, alu_operand3;
 
     // Forwarding logic for ALU inputs
@@ -286,22 +293,18 @@ module RISCV_PIPELINED (
         endcase
     end
         
-    assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1;
+    assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1; // Use PC if AUIPC is set
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex[31:0] : alu_operand2; // Use immediate if alu_src is set
     
     ALU alu (
         .clk(clk),
-        .mac_enable1(mac_enable),
-        .a(alu_input), // Forwarded or original data read from register
-        .b(alu_input2), // Use immediate value if alu_src is set
+        .a(alu_input), 
+        .b(alu_input2), 
         .c(alu_operand3),
         .alu_control(alu_control),
         .result(alu_result),
-        .mac_enable2(mac_done),
         .zero(zero) 
     );
-
-    assign mac_enable = !mac_done;
 
     logic [31:0] ex_next_pc;
     branch branch_unit (
@@ -318,7 +321,6 @@ module RISCV_PIPELINED (
         .next_pc(ex_next_pc) // Next PC for branch or jump
     );
 
-    assign next_pc = ex_next_pc; // Update next PC based on branch or jump
     assign ex_taken = (ex_next_pc != (pc_id_ex + 32'h4)); // Taken if next PC is not the default incremented PC
 
     // ------EXECUTE STAGE / MEMORY STAGE------

@@ -1,18 +1,16 @@
 
 module ALU (
     input logic clk,
-    input logic mac_enable,      
     input logic [31:0] a,          // First operand
     input logic [31:0] b,          // Second operand
     input logic [31:0] c,
     input logic [3:0] alu_control, // ALU control signal
 
     output logic [31:0] result,    // ALU result
-    output logic zero,              // Zero flag
-    output logic mac_done
+    output logic zero              // Zero flag
 );
     // A new instruction could be used to store the accumulator or load it
-    logic [47:0] result_dsp;
+    logic [43:0] result_dsp;
     
     // DSP operations
     // This dsp module is for MAC (Multiply and accumulate) instructions
@@ -36,14 +34,7 @@ module ALU (
             4'b0111: result = (a < b) ? 32'b1 : 32'b0; // Set less than
             4'b1001: result = (a < b) ? 32'b1 : 32'b0; // Set less than unsigned
             4'b1010: result = a >>> b[4:0]; // Shift right arithmetic
-            4'b1011: begin
-                if(mac_enable) begin
-                    result = result_dsp[31:0]; // MAC 
-                    mac_done = 1'b1; // As soon as the operation is completed, disable MAC
-                end else begin
-                    result = result; // Return previous result
-                end
-            end 
+            4'b1011: result = result_dsp[31:0]; // (MAC)
             4'b1100: result = 32'b0; 
             4'b1101: result = 32'b0;
             

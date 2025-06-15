@@ -6,7 +6,6 @@ module ALU_control (
    input logic alu_src,
    input logic funct7, // bit 30
    input logic funct7_mac, // bit 25 for mults
-   output logic mac_enable,
    output logic [3:0] alu_control  
 );
     
@@ -30,10 +29,7 @@ module ALU_control (
                         5'b00_010 : alu_control = 4'b0111; // slt
                         5'b00_011 : alu_control = 4'b1001; // sltu
                         5'b10_101 : alu_control = 4'b1010; // sra
-                        5'b01_000 : begin
-                            alu_control = 4'b1011; // mult (mul)
-                            mac_enable = 1'b1; 
-                        end 
+                        5'b01_000 : alu_control = 4'b1011; // mac (multiply and accumulate)
                         5'b01_100 : alu_control = 4'b1100; // div
                         5'b01_101 : alu_control = 4'b1101; // rem
                         default: alu_control = 4'b0; // default case

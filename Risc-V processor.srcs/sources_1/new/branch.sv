@@ -29,7 +29,7 @@ module branch (
             next_pc = pc + big_immediate[31:0]; // JAL instruction updates PC
         end else if (jalr) begin
             next_pc = (read_data1 + big_immediate) & ~32'b1; // JALR instruction updates PC
-        end else if (branch) begin
+        end else if (take_the_branch) begin
             next_pc = pc + big_immediate[31:0];
         end else begin
             next_pc = pc + 4; // Default: next PC is current PC + 4
