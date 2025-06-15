@@ -1,0 +1,12 @@
+# Vivado stuff 
+*.cache
+*.hw
+*.runs
+*.sims
+*.gen
+
+# Keep 
+!*.xpr
+!*.wcfg
+!RISC-V*srcs/
+!RISC-V*ip_user_files/
