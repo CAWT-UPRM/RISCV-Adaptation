@@ -31,7 +31,7 @@ module ALU (
             4'b0100: result = a ^ b;   // XOR
             4'b0101: result = a >> b[4:0]; // Shift right logical
             4'b0110: result = a - b;   // Subtraction
-            4'b0111: result = (a < b) ? 32'b1 : 32'b0; // Set less than
+            4'b0111: result = ($signed(a) < $signed(b)) ? 32'b1 : 32'b0; // Set less than
             4'b1001: result = (a < b) ? 32'b1 : 32'b0; // Set less than unsigned
             4'b1010: result = a >>> b[4:0]; // Shift right arithmetic
             4'b1011: result = result_dsp[31:0]; // (MAC)

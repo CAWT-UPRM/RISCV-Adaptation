@@ -7,7 +7,9 @@ module Hazard_Detection (
 
     output logic stall, pc_write_, if_id_write
 );
-    wire load_hazard = id_ex_mem_read && ((reg_dest_id_ex == if_id_rs1) || (reg_dest_id_ex == if_id_rs2));
+    logic rs1_match = (if_id_rs1 == reg_dest_id_ex);
+    logic rs2_match = (if_id_rs2 == reg_dest_id_ex);
+    logic load_hazard = id_ex_mem_read && (rs1_match || rs2_match);
 
     always_comb begin
         // Default values

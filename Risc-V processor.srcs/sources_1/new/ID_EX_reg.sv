@@ -28,7 +28,6 @@ module ID_EX_reg (
     input logic [31:0] data_read2,
     input logic [31:0] data_read3,
     input logic [1:0] id_size, // Size of the data to be written (e.g., 00 for byte, 01 for half-word, 10 for word)
-    input logic id_load_unsigned, // Flag to indicate if the load is unsigned
 
     output logic [31:0] pc_id_ex,
     output logic [31:0] instruction_id_ex,
@@ -54,8 +53,6 @@ module ID_EX_reg (
     output logic [4:0] reg1_id_ex,
     output logic [2:0] funct3_id_ex,
     output logic [6:0] funct7_id_ex,
-    output logic [1:0] id_ex_size, // Size of the data to be written
-    output logic id_ex_load_unsigned // Flag to indicate if the load is unsigned
     
 );
 
@@ -85,8 +82,6 @@ module ID_EX_reg (
             reg1_id_ex <= 5'b0;
             funct3_id_ex <= 3'b0;
             funct7_id_ex <= 7'b0;
-            id_ex_size <= 2'b0; 
-            id_ex_load_unsigned <= 1'b0; 
 
         end else begin
 
@@ -114,8 +109,6 @@ module ID_EX_reg (
             reg2_id_ex <= reg2; // Second source register
             funct3_id_ex <= funct3; // funct3 bits
             funct7_id_ex <= funct7; // funct7 bits
-            id_ex_size <= id_ex_size; // Size of the data to be written
-            id_ex_load_unsigned <= id_ex_load_unsigned; // Flag for unsigned load
         end
     end
 endmodule
