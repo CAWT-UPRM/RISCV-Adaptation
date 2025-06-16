@@ -13,15 +13,8 @@ module branch (
     assign take_the_branch = (branch && 
         ((zero && !bne) || (!zero && bne) || (blt && !zero) || (bge && zero)));
 
-    always_comb begin 
-        if (jal) begin
-            next_pc = branch_target; // JAL instruction updates PC
-        end else if (jalr) begin
-            next_pc = jalr_target; // JALR instruction updates PC
-        end else if (take_the_branch) begin
-            next_pc = branch_target;;
-        end else begin
-            next_pc = pc + 4; // Default: next PC is current PC + 4
-        end
-    end
+    assign next_pc = (jal ? branch_target : 
+                    jalr ? jalr_target : 
+                    take_the_branch ? branch_target : 
+                    pc + 4);
 endmodule

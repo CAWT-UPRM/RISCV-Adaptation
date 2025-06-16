@@ -30,6 +30,12 @@ module RISCV_PIPELINED (
     logic [31:0] instruction_if_id;
     logic [31:0] pc_if_id;
     
+    // Flush signal 
+    logic ex_taken;
+    
+    // Hazard detection unit to handle stalls
+    logic stall, pc_write, if_id_write;
+    
     // ID/EX pipeline registers
     logic [31:0] pc_id_ex, instruction_id_ex;
     logic id_ex_branch, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
@@ -40,6 +46,8 @@ module RISCV_PIPELINED (
     logic [2:0] funct3_id_ex;
     logic [6:0] funct7_id_ex;
     logic id_ex_flush = ex_taken; // Flush if branch is taken
+    
+    logic [31:0] ex_next_pc;
     
     // EX/MEM pipeline registers
     logic ex_mem_memread, ex_mem_memwrite, ex_mem_memtoreg, ex_mem_regwrite, ex_mem_jal, ex_mem_jalr;
@@ -80,9 +88,6 @@ module RISCV_PIPELINED (
         .instruction_address(pc), 
         .instruction(instruction)
     );
-
-    // Flush signal 
-    logic ex_taken;
 
     // ------INSTRUCTION FETCH / INSTRUCTION DECODE------
 
@@ -136,9 +141,6 @@ module RISCV_PIPELINED (
         .instruction(instruction_if_id), 
         .immediate(big_immediate) 
     );
-
-    // Hazard detection unit to handle stalls
-    logic stall, pc_write, if_id_write;
     
     Hazard_Detection hazard_detection_unit (
         .clk(clk),
@@ -308,7 +310,6 @@ module RISCV_PIPELINED (
         .zero(zero) 
     );
 
-    logic [31:0] ex_next_pc;
     branch branch_unit (
         .pc(pc_id_ex), 
         .read_data1(data_read1_id_ex), 

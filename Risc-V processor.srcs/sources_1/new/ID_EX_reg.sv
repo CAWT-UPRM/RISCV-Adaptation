@@ -27,7 +27,6 @@ module ID_EX_reg (
     input logic [31:0] data_read1,
     input logic [31:0] data_read2,
     input logic [31:0] data_read3,
-    input logic [1:0] id_size, // Size of the data to be written (e.g., 00 for byte, 01 for half-word, 10 for word)
 
     output logic [31:0] pc_id_ex,
     output logic [31:0] instruction_id_ex,
@@ -52,7 +51,7 @@ module ID_EX_reg (
     output logic [4:0] reg2_id_ex,
     output logic [4:0] reg1_id_ex,
     output logic [2:0] funct3_id_ex,
-    output logic [6:0] funct7_id_ex,
+    output logic [6:0] funct7_id_ex
     
 );
 

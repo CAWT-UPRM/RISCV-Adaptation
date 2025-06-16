@@ -26,8 +26,7 @@ module Registers(
             for (int i = 0; i < 32; i++) begin
                 regs[i] <= 32'b0;
             end
-        end
-        if(reg_write_enable) begin
+        end else if(reg_write_enable) begin
             if (write_reg != 5'h0) begin // Register 0 is hardwired to zero
                 regs[write_reg] <= write_data; // Write data to the specified register
             end
