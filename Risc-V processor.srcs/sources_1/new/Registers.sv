@@ -4,7 +4,6 @@ module Registers(
     input logic clk,
     input logic [4:0] read_reg1, // Register to read from, instruction bits 19-15
     input logic [4:0] read_reg2, // Register to read from, instruction bits 24-20
-    input logic [4:0] read_reg3, 
     input logic [4:0] write_reg, // Register to write to, instruction bits 11-7
     input logic [31:0] write_data, // Data to write
     input logic reg_write_enable, // Enable writing to register
@@ -117,42 +116,6 @@ module Registers(
         5'h1E  : read_data2 = t5; 
         5'h1F  : read_data2 = t6; 
         default: read_data2 = 32'b0; 
-    endcase
-
-    always_comb unique case (read_reg3)
-        5'h0   : read_data3 = zero; // Register 0, always zero
-        5'h1   : read_data3 = ra; 
-        5'h2   : read_data3 = sp; 
-        5'h3   : read_data3 = gp; 
-        5'h4   : read_data3 = tp; 
-        5'h5   : read_data3 = t0; 
-        5'h6   : read_data3 = t1; 
-        5'h7   : read_data3 = t2; 
-        5'h8   : read_data3 = s0; 
-        5'h9   : read_data3 = s1; 
-        5'hA   : read_data3 = a0; 
-        5'hB   : read_data3 = a1; 
-        5'hC   : read_data3 = a2; 
-        5'hD   : read_data3 = a3; 
-        5'hE   : read_data3 = a4; 
-        5'hF   : read_data3 = a5; 
-        5'h10  : read_data3 = a6; 
-        5'h11  : read_data3 = a7; 
-        5'h12  : read_data3 = s2; 
-        5'h13  : read_data3 = s3; 
-        5'h14  : read_data3 = s4; 
-        5'h15  : read_data3 = s5; 
-        5'h16  : read_data3 = s6; 
-        5'h17  : read_data3 = s7; 
-        5'h18  : read_data3 = s8; 
-        5'h19  : read_data3 = s9; 
-        5'h1A  : read_data3 = s10; 
-        5'h1B  : read_data3 = s11; 
-        5'h1C  : read_data3 = t3; 
-        5'h1D  : read_data3 = t4; 
-        5'h1E  : read_data3 = t5; 
-        5'h1F  : read_data3 = t6; 
-        default: read_data3 = 32'b0; 
     endcase
 
     always_ff @(posedge clk) begin

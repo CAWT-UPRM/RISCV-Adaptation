@@ -120,7 +120,6 @@ module RISCV_PIPELINED (
         .clk(clk),
         .read_reg1(reg1),
         .read_reg2(reg2),
-        .read_reg3(reg_dest),
         .write_reg(mem_wb_reg_dest), // added later in wb stage
         .write_data(mem_wb_write_data), // added later in wb stage
         .reg_write_enable(mem_wb_regwrite),
@@ -238,19 +237,17 @@ module RISCV_PIPELINED (
     );
 
     // Forwarding unit to handle data hazards
-    logic [1:0] forward_a, forward_b, forward_c;
+    logic [1:0] forward_a, forward_b;
     Forward forwarding_unit ( 
         .id_ex_rs1(reg1_id_ex), 
         .id_ex_rs2(reg2_id_ex), 
-        .id_ex_rs3(reg_dest_id_ex),
         .ex_mem_rd(ex_mem_reg_dest), 
         .mem_wb_rd(mem_wb_reg_dest), 
         .ex_mem_reg_write(ex_mem_regwrite), 
         .mem_wb_reg_write(mem_wb_regwrite),
         // Outputs  
         .forward_a(forward_a), 
-        .forward_b(forward_b),
-        .forward_c(forward_c)
+        .forward_b(forward_b)
     );
 
     // ------EXECUTE STAGE------
@@ -268,7 +265,7 @@ module RISCV_PIPELINED (
         .alu_control(alu_control)
     );
 
-    logic [31:0] alu_operand1, alu_operand2, alu_operand3;
+    logic [31:0] alu_operand1, alu_operand2;
 
     // Forwarding logic for ALU inputs
     always_comb begin
@@ -285,13 +282,6 @@ module RISCV_PIPELINED (
             2'b10: alu_operand2 = ex_mem_alu_result; // Forward from EX/MEM stage
             default: alu_operand2 = data_read2_id_ex; // Default case
         endcase
-
-        unique case (forward_c)
-            2'b00: alu_operand3 = data_read3_id_ex; // No forwarding
-            2'b01: alu_operand3 = mem_wb_write_data; // Forward from MEM/WB stage
-            2'b10: alu_operand3 = ex_mem_alu_result; // Forward from EX/MEM stage 
-            default: alu_operand3 = data_read3_id_ex; // Default case
-        endcase
     end
         
     assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1; // Use PC if AUIPC is set
@@ -301,7 +291,6 @@ module RISCV_PIPELINED (
         .clk(clk),
         .a(alu_input), 
         .b(alu_input2), 
-        .c(alu_operand3),
         .alu_control(alu_control),
         .result(alu_result),
         .zero(zero) 
