@@ -1,0 +1,12 @@
+# Ignore generated Vivado stuff 
+*.cache
+*.hw
+*.runs
+*.sims
+*.gen
+
+# Keep important files
+!*.xpr
+!*.wcfg
+!RISC-V*srcs/
+!RISC-V*ip_user_files/
