@@ -76,6 +76,9 @@ module EX1_EX2_reg (
             ex2_jalr <= 1'b0;
             ex2_auipc <= 1'b0;
             ex2_alu_op <= 2'b0;
+            alu_result_ex2 <= 32'b0;
+            link_addr_ex2 <= 32'b0;
+            zero_ex2 <= 1'b0;
             data_read1_ex2 <= 32'b0;
             data_read2_ex2 <= 32'b0;
             data_read3_ex2 <= 32'b0;
@@ -103,6 +106,9 @@ module EX1_EX2_reg (
             ex2_jalr <= ex1_jalr;
             ex2_auipc <= ex1_auipc;
             ex2_alu_op <= ex1_alu_op;
+            alu_result_ex2 <= alu_result_ex1;
+            link_addr_ex2 <= link_addr_ex1;
+            zero_ex2 <= zero_ex1;
             data_read1_ex2 <= data_read1_ex1;
             data_read2_ex2 <= data_read2_ex1;
             data_read3_ex2 <= data_read3_ex1;
