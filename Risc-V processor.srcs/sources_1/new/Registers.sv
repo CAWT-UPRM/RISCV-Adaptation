@@ -1,6 +1,7 @@
 
 
 module Registers(
+    input logic clk,
     input logic [4:0] read_reg1, // Register to read from, instruction bits 19-15
     input logic [4:0] read_reg2, // Register to read from, instruction bits 24-20
     input logic [4:0] read_reg3, 
@@ -154,7 +155,7 @@ module Registers(
         default: read_data3 = 32'b0; 
     endcase
 
-    always_comb begin
+    always_ff @(posedge clk) begin
         if(reg_write_enable) begin
             unique case (write_reg)
                 5'h0   : ; // Register 0, cannot write

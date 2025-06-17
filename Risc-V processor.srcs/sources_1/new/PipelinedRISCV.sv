@@ -117,6 +117,7 @@ module RISCV_PIPELINED (
     logic [31:0] data_read1, data_read2, data_read3;
     
     Registers regs (
+        .clk(clk),
         .read_reg1(reg1),
         .read_reg2(reg2),
         .read_reg3(reg_dest),
