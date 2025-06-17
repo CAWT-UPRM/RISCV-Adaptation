@@ -248,8 +248,10 @@ module RISCV_PIPELINED (
         .id_ex_rs3(reg_dest_id_ex),
         .ex_mem_rd(ex_mem_reg_dest), 
         .mem_wb_rd(mem_wb_reg_dest), 
+        .ex2_reg_dest(reg_dest_ex2), 
         .ex_mem_reg_write(ex_mem_regwrite), 
         .mem_wb_reg_write(mem_wb_regwrite),
+        .ex2_reg_write(ex2_reg_write),
         // Outputs  
         .forward_a(forward_a), 
         .forward_b(forward_b),
@@ -279,6 +281,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand1 = data_read1_id_ex; // No forwarding
             2'b01: alu_operand1 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand1 = ex_mem_alu_result; // Forward from EX/MEM stage
+            2'b11: alu_operand1 = alu_result_ex2; // Forward from EX2 stage
             default: alu_operand1 = data_read1_id_ex; // Default case
         endcase
 
@@ -286,6 +289,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand2 = data_read2_id_ex; // No forwarding
             2'b01: alu_operand2 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand2 = ex_mem_alu_result; // Forward from EX/MEM stage
+            2'b11: alu_operand2 = alu_result_ex2; //Forward from EX2 stage
             default: alu_operand2 = data_read2_id_ex; // Default case
         endcase
 
@@ -293,6 +297,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand3 = data_read3_id_ex; // No forwarding
             2'b01: alu_operand3 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand3 = ex_mem_alu_result; // Forward from EX/MEM stage 
+            2'b11: alu_operand3 = alu_result_ex2; // Forward from EX2 stage
             default: alu_operand3 = data_read3_id_ex; // Default case
         endcase
     end
