@@ -16,10 +16,6 @@ module Registers(
     // Array of 32 registers, each 32 bits wide
     logic [31:0] regs [31:0];
 
-    assign read_data1 =  regs[read_reg1];
-    assign read_data2 =  regs[read_reg2];
-    assign read_data3 =  regs[read_reg3];
-
     always_ff @(posedge clk or posedge reset) begin
         if(reset) begin
             // Reset all registers to zero
@@ -30,6 +26,26 @@ module Registers(
             if (write_reg != 5'h0) begin // Register 0 is hardwired to zero
                 regs[write_reg] <= write_data; // Write data to the specified register
             end
+        end
+    end
+
+    always_comb begin
+        if(reg_write_enable && (read_reg1 == write_reg)) begin
+            read_data1 = write_data;
+        end else begin
+            read_data1 = regs[read_reg1];
+        end
+
+        if(reg_write_enable && (read_reg2 == write_reg)) begin
+            read_data2 = write_data;
+        end else begin
+            read_data2 = regs[read_reg2];
+        end
+
+        if(reg_write_enable && (read_reg3 == write_reg)) begin
+            read_data3 = write_data;
+        end else begin
+            read_data3 = regs[read_reg3];
         end
     end
 endmodule

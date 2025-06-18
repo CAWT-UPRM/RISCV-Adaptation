@@ -1,6 +1,5 @@
 
 module ALU (
-    input logic clk,
     input logic [31:0] a,          // First operand
     input logic [31:0] b,          // Second operand
     input logic [31:0] c,

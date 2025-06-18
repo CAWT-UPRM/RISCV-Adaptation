@@ -14,7 +14,7 @@ module SC_stimulus;
     
     initial begin 
         rst = 1'b1; // Start with reset high
-        #30; // Wait for 10 time units
+        #30; // Wait for 30 time units
         rst = 1'b0; // Release reset
         #1500; // Run the simulation for a while
         $finish; // End the simulation

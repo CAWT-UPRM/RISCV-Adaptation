@@ -25,7 +25,7 @@ module Data_memory #(
         .clka   (clk),
         .ena    (1'b1), // always enabled 
         .wea    (write_enable), 
-        .addra  (address[9:2]), 
+        .addra  (address[31:2]), 
         .dina   (write_word), // This is the data write from CPU
         .douta  (bram_data) // This is the data read from BRAM
     );
