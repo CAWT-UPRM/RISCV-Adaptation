@@ -9,7 +9,7 @@ module RISCV_Single_Cycle (
     logic [31:0] pc;
     logic [31:0] next_pc;
     logic [31:0] instruction;
-    logic [31:0] data_read1, data_read2;
+    logic [31:0] data_read1, data_read2, data_read3;
     logic [31:0] data_to_write; // write data wire registers
     logic [63:0] big_immediate;
     logic [31:0] memory_data_read; // read data wire
@@ -33,17 +33,22 @@ module RISCV_Single_Cycle (
     );
 
     Registers regs (
+        .clk(clk),
+        .reset(reset),
         .read_reg1(instruction[19:15]),
         .read_reg2(instruction[24:20]),
+        .read_reg3(instruction[11:7]),
         .write_reg(instruction[11:7]),
         .write_data(data_to_write), 
         .reg_write_enable(reg_write),
         .read_data1(data_read1),
-        .read_data2(data_read2) 
+        .read_data2(data_read2),
+        .read_data3(data_read3) 
     );
 
     Control control_unit (
         .opcode(instruction[6:0]),
+        .funct3(instruction[14:12]),
         .branch(branch),
         .bne(bne),
         .blt(blt),
@@ -80,6 +85,8 @@ module RISCV_Single_Cycle (
         .result(alu_result),
         .zero(zero) 
     );
+
+    assign led = alu_result[0];
 
     branch branch_unit (
         .pc(pc),
@@ -119,7 +126,5 @@ module RISCV_Single_Cycle (
             data_to_write = alu_result; 
         end
     end
-    
-    assign led = alu_result[0];
     
 endmodule

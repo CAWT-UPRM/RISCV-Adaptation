@@ -12,12 +12,6 @@ module Data_memory #(
     output logic [data_width-1:0] read_data
 );
 
-    // drop bottom two bits to index 32-bit words
-    logic [address_width-1:0] word_address;
-    // Do assigns, or else vivado will use it only on the beggining
-    // logic [address_width-1:0] word_address = address[address_width+1:2]; THIS IS NONO 
-    assign word_address = address[address_width+1:2];
-
     // raw 32-bit word read from BRAM
     logic [31:0] bram_data;
 
@@ -31,7 +25,7 @@ module Data_memory #(
         .clka   (clk),
         .ena    (1'b1), // always enabled 
         .wea    (write_enable), 
-        .addra  (word_address), 
+        .addra  (address[31:2]), 
         .dina   (write_word), // This is the data write from CPU
         .douta  (bram_data) // This is the data read from BRAM
     );
