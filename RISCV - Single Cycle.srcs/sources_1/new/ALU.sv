@@ -3,10 +3,20 @@
 module ALU (
     input logic [31:0] a,          // First operand
     input logic [31:0] b,          // Second operand
+    input logic [31:0] c,
     input logic [3:0] alu_control, // ALU control signal
     output logic [31:0] result,    // ALU result
     output logic zero               // Zero flag
 );
+
+    logic [43:0] result_dsp;
+
+    MAC_dsp mac_inst (
+        .A(a[24:0]),
+        .B(b[17:0]),
+        .C(c),
+        .P(result_dsp)
+    );
 
     always_comb begin
         case (alu_control)
@@ -20,15 +30,9 @@ module ALU (
             4'b0111: result = (a < b) ? 32'b1 : 32'b0; // Set less than
             4'b1001: result = (a < b) ? 32'b1 : 32'b0; // Set less than unsigned
             4'b1010: result = a >>> b[4:0]; // Shift right arithmetic
-            4'b1011: result = a * b; // Multiplication
-            4'b1100: begin // Division
-                if (b != 0) begin
-                    result = a / b; // Integer division
-                end else begin
-                    result = 32'b0; // Handle division by zero
-                end
-            end
-            4'b1101: result = a % b; // Remainder
+            4'b1011: result = result_dsp[31:0];  // MAC
+            4'b1100: result = 32'b0;
+            4'b1101: result = 32'b0;
             
             default: result = 32'b0;   // Default case
         endcase

@@ -81,6 +81,7 @@ module RISCV_Single_Cycle (
     ALU alu (
         .a(auipc ? pc : data_read1),
         .b(alu_src ? big_immediate[31:0] : data_read2), // Use immediate value if alu_src is set
+        .c(data_read3),
         .alu_control(alu_control),
         .result(alu_result),
         .zero(zero) 
