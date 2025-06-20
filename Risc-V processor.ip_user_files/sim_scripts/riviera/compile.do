@@ -47,9 +47,6 @@ vcom -work dsp_macro_v1_0_7 -93  -incr \
 vcom -work xil_defaultlib -93  -incr \
 "../../../Risc-V processor.gen/sources_1/ip/MAC_dsp/sim/MAC_dsp.vhd" \
 
-vlog -work xil_defaultlib  -incr -v2k5 -l xpm -l blk_mem_gen_v8_4_9 -l xil_defaultlib -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 \
-"../../../Risc-V processor.gen/sources_1/ip/Instruction_Memory_1/sim/Instruction_Memory.v" \
-
 vlog -work xil_defaultlib  -incr -l xpm -l blk_mem_gen_v8_4_9 -l xil_defaultlib -l xbip_dsp48_wrapper_v3_0_6 -l xbip_utils_v3_0_14 -l xbip_pipe_v3_0_10 -l dsp_macro_v1_0_7 \
 "../../../Risc-V processor.srcs/sources_1/new/ALU.sv" \
 "../../../Risc-V processor.srcs/sources_1/new/ALU_Control.sv" \

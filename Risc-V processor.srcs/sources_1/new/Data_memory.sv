@@ -1,15 +1,13 @@
 module Data_memory #(
-    parameter address_width = 10,
-    parameter data_width    = 32  // 4 bytes per word
 ) (
     input  logic clk,
     input  logic [31:0] address,
-    input  logic [data_width-1:0] write_data,
+    input  logic [31:0] write_data,
     input  logic [2:0] funct3,
     input  logic mem_write,
     input  logic mem_read,
 
-    output logic [data_width-1:0] read_data
+    output logic [31:0] read_data
 );
 
     // raw 32-bit word read from BRAM
@@ -25,7 +23,7 @@ module Data_memory #(
         .clka   (clk),
         .ena    (1'b1), // always enabled 
         .wea    (write_enable), 
-        .addra  (address[31:2]), 
+        .addra  (address[9:2]), 
         .dina   (write_word), // This is the data write from CPU
         .douta  (bram_data) // This is the data read from BRAM
     );
@@ -54,7 +52,7 @@ module Data_memory #(
                         // low half
                         write_word   = { bram_data[31:16], write_data[15:0] };
                         write_enable = 4'b0011;
-                    end else begin
+                    end else if (address[1:0] == 2'b10) begin
                         // high half (address[1:0]==2)
                         write_word   = { write_data[15:0], bram_data[15:0] };
                         write_enable = 4'b1100;
@@ -89,7 +87,7 @@ module Data_memory #(
                 3'b001: // LH (sign-extend)
                     if (address[1:0] == 2'd0)
                         read_data <= {{16{bram_data[15]}}, bram_data[15:0]};
-                    else
+                    else if (address[1:0] == 2'b10)
                         read_data <= {{16{bram_data[31]}}, bram_data[31:16]};
 
                 3'b010: // LW

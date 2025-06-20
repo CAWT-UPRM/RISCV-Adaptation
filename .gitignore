@@ -2,7 +2,7 @@
 *.cache
 *.hw
 *.runs
-*.sims
+*.sim
 *.gen
 
 # Keep important files
