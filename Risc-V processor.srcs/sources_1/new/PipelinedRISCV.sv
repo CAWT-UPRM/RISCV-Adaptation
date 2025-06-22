@@ -45,7 +45,9 @@ module RISCV_PIPELINED (
     logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex;
     logic [2:0] funct3_id_ex;
     logic [6:0] funct7_id_ex;
-    logic id_ex_flush = ex_taken; // Flush if branch is taken
+    logic id_ex_flush; // Flush if branch is taken
+
+    assign id_ex_flush = ex_taken;
     
     logic [31:0] ex_next_pc;
 
@@ -148,17 +150,6 @@ module RISCV_PIPELINED (
         .immediate(big_immediate) 
     );
     
-    Hazard_Detection hazard_detection_unit (
-        .clk(clk),
-        .if_id_rs1(reg1), 
-        .if_id_rs2(reg2), 
-        .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
-        .id_ex_mem_read(id_ex_mem_read), // From ID/EX stage
-        .stall(stall), 
-        .pc_write_(pc_write), 
-        .if_id_write(if_id_write)
-    );
-    
     // Control signals
     logic branch, bne, blt, bge, mem_read, memtoreg, mem_write, alu_src, reg_write, jal, jalr, auipc;
     logic [1:0] alu_op;
@@ -178,6 +169,17 @@ module RISCV_PIPELINED (
         .jal(jal),
         .jalr(jalr),
         .auipc(auipc)
+    );
+
+    Hazard_Detection hazard_detection_unit (
+        .clk(clk),
+        .if_id_rs1(reg1), 
+        .if_id_rs2(reg2), 
+        .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
+        .id_ex_mem_read(mem_read), // From ID/EX stage
+        .stall(stall), 
+        .pc_write_(pc_write), 
+        .if_id_write(if_id_write)
     );
 
     // ------INSTRUCTION DECODE / EXECUTE STAGE------    
@@ -322,10 +324,9 @@ module RISCV_PIPELINED (
 
     logic [31:0] pc_ex2;
     logic [31:0] instruction_ex2;
-    logic zero_ex1;
     logic ex2_branch, zero_ex2, ex2_bne, ex2_blt, ex2_bge, ex2_mem_read, ex2_memtoreg, ex2_mem_write, ex2_alu_src, ex2_reg_write, ex2_jal, ex2_jalr, ex2_auipc;
     logic [1:0] ex2_alu_op;
-    logic [31:0] alu_result_ex1, link_addr_ex1, link_addr_ex2;
+    logic [31:0] link_addr_ex1, link_addr_ex2;
     logic [31:0] alu_result_ex2, data_read1_ex2, data_read2_ex2, data_read3_ex2;
     logic [63:0] big_immediate_ex2;
     logic [4:0] reg_dest_ex2, reg1_ex2, reg2_ex2;
@@ -333,9 +334,7 @@ module RISCV_PIPELINED (
     logic [6:0] funct7_ex2;
 
     assign led = alu_result[0];
-    assign alu_result_ex1 = alu_result; // ALU result for EX1 stage
     assign link_addr_ex1 = pc_id_ex + 32'h4; // Link address for JALR, which is the next instruction address
-    assign zero_ex1 = zero;
 
     // Intermediate register between ID/EX and EX/MEM 
     EX1_EX2_reg inter_reg (
@@ -357,10 +356,10 @@ module RISCV_PIPELINED (
         .ex1_jalr(id_ex_jalr),
         .ex1_auipc(id_ex_auipc),
         .ex1_alu_op(id_ex_alu_op),
-        .alu_result_ex1(alu_result_ex1),
+        .alu_result_ex1(alu_result),
         .link_addr_ex1(link_addr_ex1), // Link address for JALR
-        .data_read1_ex1(alu_input),
-        .data_read2_ex1(alu_input2),
+        .data_read1_ex1(alu_operand1),
+        .data_read2_ex1(alu_operand2),
         .data_read3_ex1(alu_operand3),
         .big_immediate_ex1(big_immediate_id_ex),
         .reg1_ex1(reg1_id_ex),
@@ -459,7 +458,6 @@ module RISCV_PIPELINED (
         .mem_write(ex_mem_memwrite), // Memory write control signal
         .mem_read(ex_mem_memread), // Memory read control signal
         .read_data(memory_data_read) // Data to write back to registers
-
     );
 
     MEM_WB_reg mem_wb_reg (

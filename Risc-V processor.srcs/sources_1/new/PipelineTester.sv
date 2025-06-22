@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
 
-module SC_stimulus;
+module PipelineTester;
 
     logic clk = 0; 
     logic rst;
 
-    RISCV_PIPELINED main (
+    RISCV_PIPELINED processor (
         .clk(clk),
         .reset(rst)
     );
