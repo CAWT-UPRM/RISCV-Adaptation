@@ -9,6 +9,9 @@ module Data_memory (
     output logic [31:0] read_data
 );
 
+    localparam data_base = 32'h1000_0000; // Base address for data memory
+    localparam data_words = 8360; // Number of 32-bit words in data memory
+
     // raw 32-bit word read from BRAM
     logic [31:0] bram_data;
 
@@ -17,12 +20,19 @@ module Data_memory (
     // lets me control which bytes of the word to write
     logic [3:0]  write_enable;
 
+    logic [13:0] word_address;
+    
+    // byte offset computation then divided by 4 to get word address
+    // This assumes address is always a multiple of 4, which is true for RISC-V
+    // instructions and data accesses.
+    assign word_address = (address - data_base) >> 2; // convert byte address to word address
+
     //----- BRAM instantiation -----
     blk_mem_gen_0 mem_inst (
         .clka   (clk),
         .ena    (1'b1), // always enabled 
         .wea    (write_enable), 
-        .addra  (address[10:2]), 
+        .addra  (word_address), 
         .dina   (write_word), // This is the data write from CPU
         .douta  (bram_data) // This is the data read from BRAM
     );

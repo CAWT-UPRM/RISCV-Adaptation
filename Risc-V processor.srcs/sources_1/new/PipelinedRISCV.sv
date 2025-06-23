@@ -41,7 +41,7 @@ module RISCV_PIPELINED (
     logic id_ex_branch, id_ex_bne, id_ex_blt, id_ex_bge, id_ex_mem_read, id_ex_memtoreg, id_ex_mem_write, id_ex_auipc, id_ex_alu_src, id_ex_reg_write, id_ex_jal, id_ex_jalr;
     logic [1:0] id_ex_alu_op;
     logic [31:0] data_read1_id_ex, data_read2_id_ex, data_read3_id_ex;
-    logic [63:0] big_immediate_id_ex;
+    logic [31:0] big_immediate_id_ex;
     logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex;
     logic [2:0] funct3_id_ex;
     logic [6:0] funct7_id_ex;
@@ -143,7 +143,7 @@ module RISCV_PIPELINED (
         .read_data3(data_read3)
     );
     
-    logic [63:0] big_immediate;
+    logic [31:0] big_immediate;
 
     Immediate_generator imm_gen (
         .instruction(instruction_if_id), 
@@ -311,7 +311,7 @@ module RISCV_PIPELINED (
     end
         
     assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1; // Use PC if AUIPC is set
-    assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex[31:0] : alu_operand2; // Use immediate if alu_src is set
+    assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2; // Use immediate if alu_src is set
     
     ALU alu (
         .a(alu_input), 
@@ -328,7 +328,7 @@ module RISCV_PIPELINED (
     logic [1:0] ex2_alu_op;
     logic [31:0] link_addr_ex1, link_addr_ex2;
     logic [31:0] alu_result_ex2, data_read1_ex2, data_read2_ex2, data_read3_ex2;
-    logic [63:0] big_immediate_ex2;
+    logic [31:0] big_immediate_ex2;
     logic [4:0] reg_dest_ex2, reg1_ex2, reg2_ex2;
     logic [2:0] funct3_ex2;
     logic [6:0] funct7_ex2;

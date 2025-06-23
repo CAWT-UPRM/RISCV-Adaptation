@@ -4,6 +4,9 @@
 *.runs
 *.sim
 *.gen
+*.bin
+*.elf
+*.o
 
 # Keep important files
 !*.xpr

@@ -18,7 +18,7 @@ module ID_EX_reg (
     input logic [1:0] alu_op,
     input logic [31:0] pc_if_id,
     input logic [31:0] instruction_if_id,
-    input logic [63:0] big_immediate,
+    input logic [31:0] big_immediate,
     input logic [4:0] reg1,
     input logic [4:0] reg2,
     input logic [4:0] reg_dest,
@@ -46,7 +46,7 @@ module ID_EX_reg (
     output logic [31:0] data_read1_id_ex,
     output logic [31:0] data_read2_id_ex,
     output logic [31:0] data_read3_id_ex,
-    output logic [63:0] big_immediate_id_ex,
+    output logic [31:0] big_immediate_id_ex,
     output logic [4:0] reg_dest_id_ex,
     output logic [4:0] reg2_id_ex,
     output logic [4:0] reg1_id_ex,
@@ -75,7 +75,7 @@ module ID_EX_reg (
             data_read1_id_ex <= 32'b0;
             data_read2_id_ex <= 32'b0;
             data_read3_id_ex <= 32'b0; 
-            big_immediate_id_ex <= 64'b0;
+            big_immediate_id_ex <= 32'b0;
             reg_dest_id_ex <= 5'b0;
             reg2_id_ex <= 5'b0;
             reg1_id_ex <= 5'b0;

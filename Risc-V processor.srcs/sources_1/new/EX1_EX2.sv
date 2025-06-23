@@ -23,7 +23,7 @@ module EX1_EX2_reg (
     input logic [31:0] data_read1_ex1,
     input logic [31:0] data_read2_ex1,
     input logic [31:0] data_read3_ex1,
-    input logic [63:0] big_immediate_ex1,
+    input logic [31:0] big_immediate_ex1,
     input logic [4:0] reg1_ex1,
     input logic [4:0] reg2_ex1,
     input logic [4:0] reg_dest_ex1,
@@ -51,7 +51,7 @@ module EX1_EX2_reg (
     output logic [31:0] data_read1_ex2,
     output logic [31:0] data_read2_ex2,
     output logic [31:0] data_read3_ex2,
-    output logic [63:0] big_immediate_ex2,
+    output logic [31:0] big_immediate_ex2,
     output logic [4:0] reg1_ex2,
     output logic [4:0] reg2_ex2,
     output logic [4:0] reg_dest_ex2,
@@ -79,7 +79,7 @@ module EX1_EX2_reg (
             data_read1_ex2 <= 32'b0;
             data_read2_ex2 <= 32'b0;
             data_read3_ex2 <= 32'b0;
-            big_immediate_ex2 <= 64'b0;
+            big_immediate_ex2 <= 32'b0;
             reg1_ex2 <= 5'b0;
             reg2_ex2 <= 5'b0;
             reg_dest_ex2 <= 5'b0;

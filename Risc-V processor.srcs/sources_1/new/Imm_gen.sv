@@ -1,6 +1,6 @@
 
 module Immediate_generator #(
-  parameter int XLEN = 64    // data-path width
+  parameter int XLEN = 32   // data-path width
 ) (
   input  logic [31:0] instruction,     
   output logic [XLEN-1:0] immediate     // sign-extended, properly shifted
