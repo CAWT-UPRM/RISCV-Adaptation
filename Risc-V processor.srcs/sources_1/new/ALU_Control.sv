@@ -36,12 +36,15 @@ module ALU_control (
                     endcase
                 end else begin
                     unique case (funct3) // I-type instructions
-                        3'b111 : alu_control = 4'b0000; // and for I-type
-                        3'b110 : alu_control = 4'b0001; // or for I-type
-                        3'b000 : alu_control = 4'b0010; // add for I-type
-                        3'b100 : alu_control = 4'b0100; // xor for I-type
-                        3'b001 : alu_control = 4'b0111; // slt for I-type
-                        3'b010 : alu_control = 4'b1001; // sltu for I-type
+                        3'b000: alu_control = 4'b0010; // add
+                        3'b001: alu_control = 4'b0011; // sll
+                        3'b010: alu_control = 4'b0111; // slt
+                        3'b011: alu_control = 4'b1001; // sltu
+                        3'b100: alu_control = 4'b0100; // xor
+                        3'b101: alu_control = 4'b0101; // srl
+                        3'b110: alu_control = 4'b0001; // or
+                        3'b111: alu_control = 4'b0000; // and
+                        3'b110: alu_control = 4'b1010; // sra
                         default: alu_control = 4'b0; // default case
                     endcase
                 end
