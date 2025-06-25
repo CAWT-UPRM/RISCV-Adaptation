@@ -4,6 +4,7 @@ module ID_EX_reg (
     input logic reset, 
     input logic flush,
     input logic branch,
+    input logic beq,
     input logic bne,
     input logic blt,
     input logic bge,
@@ -31,6 +32,7 @@ module ID_EX_reg (
     output logic [31:0] pc_id_ex,
     output logic [31:0] instruction_id_ex,
     output logic id_ex_branch,
+    output logic id_ex_beq,
     output logic id_ex_bne,
     output logic id_ex_blt,
     output logic id_ex_bge,
@@ -60,6 +62,7 @@ module ID_EX_reg (
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'b0;
             id_ex_branch <= 1'b0;
+            id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;
             id_ex_blt <= 1'b0;
             id_ex_bge <= 1'b0;
@@ -87,6 +90,7 @@ module ID_EX_reg (
             pc_id_ex <= pc_if_id; 
             instruction_id_ex <= instruction_if_id;
             id_ex_branch <= branch;
+            id_ex_beq <= beq;
             id_ex_bne <= bne;
             id_ex_blt <= blt;
             id_ex_bge <= bge;

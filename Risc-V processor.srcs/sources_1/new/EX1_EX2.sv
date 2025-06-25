@@ -2,6 +2,7 @@
 module EX1_EX2_reg (
     input logic clk, 
     input logic reset, 
+    input logic flush,
     input logic [31:0] pc_ex1,
     input logic [31:0] instruction_ex1,
     input logic zero_ex1,
@@ -60,7 +61,7 @@ module EX1_EX2_reg (
 );
 
     always_ff @(posedge clk or posedge reset) begin
-        if(reset) begin
+        if(reset || flush) begin
             pc_ex2 <= 32'b0;
             instruction_ex2 <= 32'b0;
             ex2_branch <= 1'b0;

@@ -25,7 +25,7 @@ module dm_tester ();
 
     initial begin
         
-        address = 32'h0;
+        address = 32'b00010000000000000000000000100000;
         write_data = 32'h12345678;
         mem_read = 1'b0;
         mem_write = 1'b1;
@@ -35,8 +35,9 @@ module dm_tester ();
         mem_write = 1'b0;
         funct3 = 3'b001; // LH
         mem_read = 1'b1;
-        
-        
+
+        #20;
+        $finish;        
     end
 
 endmodule

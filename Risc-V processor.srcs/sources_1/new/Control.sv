@@ -5,6 +5,7 @@ module Control (
     input logic [2:0] funct3, // 3-bit funct3, instruction bits 14:12
 
     output logic branch,
+    output logic beq,
     output logic bne,
     output logic blt, 
     output logic bge, 
@@ -31,6 +32,7 @@ module Control (
         reg_write = 1'b1;
         jal = 1'b0;
         jalr = 1'b0; 
+        beq = 1'b0;
         bne = 1'b0;
         blt = 1'b0;
         bge = 1'b0;
@@ -67,7 +69,7 @@ module Control (
                 branch = 1'b1;
                 alu_op = 2'b01; 
                 case (funct3) 
-                    3'b000 : ; // beq
+                    3'b000 : beq = 1'b1; // beq
                     3'b001 : bne = 1'b1; // bne
                     3'b100 : blt = 1'b1; // blt
                     3'b101 : bge = 1'b1; // bge
