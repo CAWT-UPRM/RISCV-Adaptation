@@ -90,12 +90,24 @@ module RISCV_PIPELINED (
         .next_pc(next_pc), 
         .pc(pc)
     );
-    
+
     InstructionMemory im (
         .clk(clk),
         .instruction_address(pc), 
         .instruction(instruction)
     );
+
+    logic [31:0] fetch_pc;
+
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            fetch_pc <= 32'b0;
+        end else if (pc_write) begin
+            fetch_pc <= pc; // Update fetch PC with next PC
+        end else begin
+            fetch_pc <= fetch_pc;
+        end
+    end
 
     // ------INSTRUCTION FETCH / INSTRUCTION DECODE------
 
@@ -104,7 +116,7 @@ module RISCV_PIPELINED (
         .reset(reset), 
         .flush(ex_taken), // IF flush should happen
         .if_id_write(if_id_write), // Control signal to write to IF/ID register
-        .pc(pc), 
+        .pc(fetch_pc), 
         .instruction(instruction), 
         // Outputs
         .pc_if_id(pc_if_id), 
@@ -172,16 +184,21 @@ module RISCV_PIPELINED (
         .auipc(auipc)
     );
 
+    logic hz_pc_write, hz_if_id_write;
+
     Hazard_Detection hazard_detection_unit (
         .clk(clk),
         .if_id_rs1(reg1), 
         .if_id_rs2(reg2), 
         .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
-        .id_ex_mem_read(mem_read), // From ID/EX stage
+        .id_ex_mem_read(id_ex_mem_read), // From ID/EX stage
         .stall(stall), 
         .pc_write_(pc_write), 
-        .if_id_write(if_id_write)
+        .if_id_write(hz_if_id_write)
     );
+
+    assign pc_write = hz_pc_write | ex_taken; 
+    assign if_id_write = hz_if_id_write && ~ex_taken;
 
     // ------INSTRUCTION DECODE / EXECUTE STAGE------    
 
@@ -335,13 +352,12 @@ module RISCV_PIPELINED (
         .bne(id_ex_bne),
         .blt(id_ex_blt),
         .bge(id_ex_bge),
-        .zero(zero), 
         .jal(id_ex_jal), 
         .jalr(id_ex_jalr), 
-        .next_pc(ex_next_pc) // Next PC for branch or jump
+        .next_pc(ex_next_pc),
+        .branch_taken(ex_taken)
     );
 
-    assign ex_taken = (ex_next_pc != (pc_id_ex + 32'h4)); // Taken if next PC is not the default incremented PC
 
     // ------EXECUTE STAGE / MEMORY STAGE------
 

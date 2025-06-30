@@ -58,9 +58,36 @@ module ID_EX_reg (
 );
 
     always_ff @(posedge clk or posedge reset) begin
-        if (reset || flush) begin
+        if (reset) begin
             pc_id_ex <= 32'b0;
             instruction_id_ex <= 32'b0;
+            id_ex_branch <= 1'b0;
+            id_ex_beq <= 1'b0;
+            id_ex_bne <= 1'b0;
+            id_ex_blt <= 1'b0;
+            id_ex_bge <= 1'b0;
+            id_ex_mem_read <= 1'b0;
+            id_ex_memtoreg <= 1'b0;
+            id_ex_mem_write <= 1'b0;
+            id_ex_alu_src <= 1'b0;
+            id_ex_reg_write <= 1'b0;
+            id_ex_jal <= 1'b0;
+            id_ex_jalr <= 1'b0;
+            id_ex_auipc <= 1'b0;
+            id_ex_alu_op <= 2'b0;
+            data_read1_id_ex <= 32'b0;
+            data_read2_id_ex <= 32'b0;
+            data_read3_id_ex <= 32'b0; 
+            big_immediate_id_ex <= 32'b0;
+            reg_dest_id_ex <= 5'b0;
+            reg2_id_ex <= 5'b0;
+            reg1_id_ex <= 5'b0;
+            funct3_id_ex <= 3'b0;
+            funct7_id_ex <= 7'b0;
+            
+        end else if (flush) begin
+            pc_id_ex <= 32'b0;
+            instruction_id_ex <= 32'h13;
             id_ex_branch <= 1'b0;
             id_ex_beq <= 1'b0;
             id_ex_bne <= 1'b0;

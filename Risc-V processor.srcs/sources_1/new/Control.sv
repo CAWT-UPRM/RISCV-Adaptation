@@ -29,7 +29,7 @@ module Control (
         alu_op = 2'b10; 
         mem_write = 1'b0;
         alu_src = 1'b0;
-        reg_write = 1'b1;
+        reg_write = 1'b0;
         jal = 1'b0;
         jalr = 1'b0; 
         beq = 1'b0;

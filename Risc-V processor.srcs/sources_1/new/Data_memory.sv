@@ -82,42 +82,42 @@ module Data_memory (
     end
 
     //----- load-side: sample bram_data and extend -----
-    always_ff @(posedge clk) begin
+    always_comb begin
         if (mem_read) begin
             unique case (funct3)
                 3'b000: // LB (sign-extend)
                     case (address[1:0])
-                        2'd0: read_data <= {{24{bram_data[7]}},  bram_data[7:0]};
-                        2'd1: read_data <= {{24{bram_data[15]}}, bram_data[15:8]};
-                        2'd2: read_data <= {{24{bram_data[23]}}, bram_data[23:16]};
-                        default: read_data <= {{24{bram_data[31]}}, bram_data[31:24]};
+                        2'd0: read_data = {{24{bram_data[7]}},  bram_data[7:0]};
+                        2'd1: read_data = {{24{bram_data[15]}}, bram_data[15:8]};
+                        2'd2: read_data = {{24{bram_data[23]}}, bram_data[23:16]};
+                        default: read_data = {{24{bram_data[31]}}, bram_data[31:24]};
                     endcase
 
                 3'b001: // LH (sign-extend)
                     if (address[1:0] == 2'd0)
-                        read_data <= {{16{bram_data[15]}}, bram_data[15:0]};
+                        read_data = {{16{bram_data[15]}}, bram_data[15:0]};
                     else if (address[1:0] == 2'b10)
-                        read_data <= {{16{bram_data[31]}}, bram_data[31:16]};
+                        read_data = {{16{bram_data[31]}}, bram_data[31:16]};
 
                 3'b010: // LW
-                    read_data <= bram_data;
+                    read_data = bram_data;
 
                 3'b100: // LBU (zero-extend)
                     case (address[1:0])
-                        2'd0: read_data <= {24'd0, bram_data[7:0]};
-                        2'd1: read_data <= {24'd0, bram_data[15:8]};
-                        2'd2: read_data <= {24'd0, bram_data[23:16]};
-                        default: read_data <= {24'd0, bram_data[31:24]};
+                        2'd0: read_data = {24'd0, bram_data[7:0]};
+                        2'd1: read_data = {24'd0, bram_data[15:8]};
+                        2'd2: read_data = {24'd0, bram_data[23:16]};
+                        default: read_data = {24'd0, bram_data[31:24]};
                     endcase
 
                 3'b101: // LHU (zero-extend)
                     if (address[1:0] == 2'd0)
-                        read_data <= {16'd0, bram_data[15:0]};
+                        read_data = {16'd0, bram_data[15:0]};
                     else
-                        read_data <= {16'd0, bram_data[31:16]};
+                        read_data = {16'd0, bram_data[31:16]};
 
                 default:
-                    read_data <= 32'd0;
+                    read_data = 32'd0;
             endcase
         end
     end

@@ -9,10 +9,12 @@
 main:
     # ---------- initialization (do not use this) ----------
     # ---------- This is to add the 1d matrix to memory ----------
-    li   t0, 0             # i = 0
     la   t1, signal        # base address of signal[]
+    la   s1, kernel
+    la   s2, result      
     li   t2, 1
     li   t6, 1024
+    li   t0, 0             # i = 0
 init_loop:
     add  t3, t0, t2        # t3 = i+1
     slli t4, t0, 2         # t4 = i*4
@@ -21,6 +23,47 @@ init_loop:
     addi t0, t0, 1
     blt  t0, t6, init_loop
 
+   # ---------- Convolution (start here) ----------
+convolution:
+    li t0, 0 # i = 0 
+    li s7, 3
+    li s9, 1022
+    
+outer_loop:
+    li t5, 0 # j = 0
+    li t4, 0 # sum = 0
+
+# Everything up there works, so dont change it.
+
+inner_loop:
+    # loading signal[i + j]
+    add s6, t0, t5 # s6 = i + j
+    slli s6, s6, 2 # word_offset * 4
+    add s6, t1, s6 # s6 = &signal[i+j]
+    lw s3, 0(s6) # s3 = signal[i+j]
+
+    # loading kernel [j]
+    slli s4, t5, 2 # s4 = j * 4
+    add s4, s1, s4 # &kernel[j]
+    lw s5, 0(s4) # s5 = kernel[j]
+    
+    # MAC!!!!!!!!!
+    # This should be changed to: 
+    #  MACF t4, s5, s3; ie t4 += s5 * s3
+    mul t4, s5, s3
+    nop
+
+    addi t5, t5, 1
+    blt t5, s7, inner_loop 
+
+outside_inner_loop:
+
+    slli s6, t0, 2 # word_offset * 4
+    add s6, s2, s6 # &result[i]
+    sw t4, 0(s6) # result[i] = sum
+
+    addi t0, t0, 1
+    blt t0, s9, outer_loop
     
 forever:
     jal forever

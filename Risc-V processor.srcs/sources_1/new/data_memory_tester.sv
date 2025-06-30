@@ -33,8 +33,13 @@ module dm_tester ();
         #10; // Wait for 10 time units
 
         mem_write = 1'b0;
-        funct3 = 3'b001; // LH
+        address = 32'h0;
+        write_data = 32'h0;
+        #15;
+
+        address = 32'b00010000000000000000000000100000;
         mem_read = 1'b1;
+        funct3 = 3'b010;
 
         #20;
         $finish;        

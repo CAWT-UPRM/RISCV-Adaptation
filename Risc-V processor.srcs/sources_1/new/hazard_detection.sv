@@ -1,7 +1,7 @@
 
 module Hazard_Detection (
     input logic clk,
-    input logic [4:0] if_id_rs1, if_id_rs2, if_id_rs3,
+    input logic [4:0] if_id_rs1, if_id_rs2,
     input logic [4:0] reg_dest_id_ex,
     input logic id_ex_mem_read,
 

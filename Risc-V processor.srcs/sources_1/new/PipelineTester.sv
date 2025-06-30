@@ -14,12 +14,11 @@ module PipelineTester;
     
     initial begin 
         rst = 1'b1; // Start with reset high
-        #20; // Wait for 30 time units
-        rst = 1'b0; // Release reset
-        //$writememh("memory_dump.txt", processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst .memory);
-        //#100;
-        #100000;
+        #20; 
+        rst = 1'b0; 
+        #300000;
         $display("Dumping data memory to memory_dump.hex");
+        // Change this to our own path if you want to use it
         $writememh(
             "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
             processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
