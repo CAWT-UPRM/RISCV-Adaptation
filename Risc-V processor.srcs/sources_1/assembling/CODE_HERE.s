@@ -47,13 +47,12 @@ inner_loop:
     add s4, s1, s4 # &kernel[j]
     lw s5, 0(s4) # s5 = kernel[j]
     
+    addi t5, t5, 1
     # MAC!!!!!!!!!
     # This should be changed to: 
     #  MACF t4, s5, s3; ie t4 += s5 * s3
     mul t4, s5, s3
-    nop
 
-    addi t5, t5, 1
     blt t5, s7, inner_loop 
 
 outside_inner_loop:

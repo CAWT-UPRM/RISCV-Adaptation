@@ -99,11 +99,12 @@ module RISCV_PIPELINED (
 
     logic [31:0] fetch_pc;
 
+    // This is simply to fix the missalignment of the PC with its corresponding instruction
     always_ff @(posedge clk) begin
         if (reset) begin
             fetch_pc <= 32'b0;
         end else if (pc_write) begin
-            fetch_pc <= pc; // Update fetch PC with next PC
+            fetch_pc <= pc;
         end else begin
             fetch_pc <= fetch_pc;
         end
@@ -184,8 +185,6 @@ module RISCV_PIPELINED (
         .auipc(auipc)
     );
 
-    logic hz_pc_write, hz_if_id_write;
-
     Hazard_Detection hazard_detection_unit (
         .clk(clk),
         .if_id_rs1(reg1), 
@@ -193,12 +192,9 @@ module RISCV_PIPELINED (
         .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
         .id_ex_mem_read(id_ex_mem_read), // From ID/EX stage
         .stall(stall), 
-        .pc_write_(pc_write), 
-        .if_id_write(hz_if_id_write)
+        .pc_write(pc_write), 
+        .if_id_write(if_id_write)
     );
-
-    assign pc_write = hz_pc_write | ex_taken; 
-    assign if_id_write = hz_if_id_write && ~ex_taken;
 
     // ------INSTRUCTION DECODE / EXECUTE STAGE------    
 

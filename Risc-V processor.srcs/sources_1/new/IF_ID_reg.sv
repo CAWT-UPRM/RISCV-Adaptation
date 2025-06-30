@@ -12,6 +12,8 @@ module IF_ID_reg (
 
 );
 
+    // One instruction seems to sneak through after a branch is executed.
+    // So double flush to fix this problem.
     logic double_flush;
 
     always_ff @(posedge clk or posedge reset) begin
