@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="PipelineTester_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="PipelineTester" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="579,942.416 ns"></ZoomStartTime>
+      <ZoomEndTime time="580,035.517 ns"></ZoomEndTime>
+      <Cursor1Time time="580,020.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="220"></NameColumnWidth>
+      <ValueColumnWidth column_width="105"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="35" />
+   <wave_markers>
+      <marker time="92325000" label="" />
+      <marker time="92345000" label="" />
+      <marker time="245000" label="" />
+      <marker time="562385000" label="" />
+   </wave_markers>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/pc" type="array">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/read_data1" type="array">
+      <obj_property name="ElementShortName">read_data1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/read_data2" type="array">
+      <obj_property name="ElementShortName">read_data2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/big_immediate" type="array">
+      <obj_property name="ElementShortName">big_immediate[31:0]</obj_property>
+      <obj_property name="ObjectShortName">big_immediate[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/branch" type="logic">
+      <obj_property name="ElementShortName">branch</obj_property>
+      <obj_property name="ObjectShortName">branch</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/beq" type="logic">
+      <obj_property name="ElementShortName">beq</obj_property>
+      <obj_property name="ObjectShortName">beq</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/bne" type="logic">
+      <obj_property name="ElementShortName">bne</obj_property>
+      <obj_property name="ObjectShortName">bne</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/blt" type="logic">
+      <obj_property name="ElementShortName">blt</obj_property>
+      <obj_property name="ObjectShortName">blt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/bge" type="logic">
+      <obj_property name="ElementShortName">bge</obj_property>
+      <obj_property name="ObjectShortName">bge</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/jal" type="logic">
+      <obj_property name="ElementShortName">jal</obj_property>
+      <obj_property name="ObjectShortName">jal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/jalr" type="logic">
+      <obj_property name="ElementShortName">jalr</obj_property>
+      <obj_property name="ObjectShortName">jalr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/next_pc" type="array">
+      <obj_property name="ElementShortName">next_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">next_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/branch_taken" type="logic">
+      <obj_property name="ElementShortName">branch_taken</obj_property>
+      <obj_property name="ObjectShortName">branch_taken</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/less" type="logic">
+      <obj_property name="ElementShortName">less</obj_property>
+      <obj_property name="ObjectShortName">less</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/greater" type="logic">
+      <obj_property name="ElementShortName">greater</obj_property>
+      <obj_property name="ObjectShortName">greater</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/nequal" type="logic">
+      <obj_property name="ElementShortName">nequal</obj_property>
+      <obj_property name="ObjectShortName">nequal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/equal" type="logic">
+      <obj_property name="ElementShortName">equal</obj_property>
+      <obj_property name="ObjectShortName">equal</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/branch_target" type="array">
+      <obj_property name="ElementShortName">branch_target[31:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_target[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/branch_unit/jalr_target" type="array">
+      <obj_property name="ElementShortName">jalr_target[31:0]</obj_property>
+      <obj_property name="ObjectShortName">jalr_target[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/pc_id_ex" type="array">
+      <obj_property name="ElementShortName">pc_id_ex[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_id_ex[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/id_ex_reg/instruction_id_ex" type="array">
+      <obj_property name="ElementShortName">instruction_id_ex[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction_id_ex[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/address" type="array">
+      <obj_property name="ElementShortName">address[31:0]</obj_property>
+      <obj_property name="ObjectShortName">address[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_data" type="array">
+      <obj_property name="ElementShortName">write_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/funct3" type="array">
+      <obj_property name="ElementShortName">funct3[2:0]</obj_property>
+      <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/mem_write" type="logic">
+      <obj_property name="ElementShortName">mem_write</obj_property>
+      <obj_property name="ObjectShortName">mem_write</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/mem_read" type="logic">
+      <obj_property name="ElementShortName">mem_read</obj_property>
+      <obj_property name="ObjectShortName">mem_read</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/read_data" type="array">
+      <obj_property name="ElementShortName">read_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/bram_data" type="array">
+      <obj_property name="ElementShortName">bram_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bram_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_word" type="array">
+      <obj_property name="ElementShortName">write_word[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_word[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/write_enable" type="array">
+      <obj_property name="ElementShortName">write_enable[3:0]</obj_property>
+      <obj_property name="ObjectShortName">write_enable[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/word_address" type="array">
+      <obj_property name="ElementShortName">word_address[13:0]</obj_property>
+      <obj_property name="ObjectShortName">word_address[13:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/data_base" type="array">
+      <obj_property name="ElementShortName">data_base[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_base[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/data_mem/data_words" type="array">
+      <obj_property name="ElementShortName">data_words[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_words[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/regs/regs" type="array">
+      <obj_property name="ElementShortName">regs[31:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">regs[31:0][31:0]</obj_property>
+   </wvobject>
+</wave_config>
