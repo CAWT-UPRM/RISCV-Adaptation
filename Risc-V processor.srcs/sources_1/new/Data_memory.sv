@@ -11,6 +11,7 @@ module Data_memory (
 
     localparam data_base = 32'h1000_0000; // Base address for data memory
     localparam data_words = 8360; // Number of 32-bit words in data memory
+    logic [31:0] byte_address;
 
     // raw 32-bit word read from BRAM
     logic [31:0] bram_data;
@@ -25,7 +26,8 @@ module Data_memory (
     // byte offset computation then divided by 4 to get word address
     // This assumes address is always a multiple of 4, which is true for RISC-V
     // instructions and data accesses.
-    assign word_address = (address - data_base) >> 2; // convert byte address to word address
+    assign byte_address = address - data_base;
+    assign word_address = byte_address[15:2]; // 14 bits for 8360 words 
 
     //----- BRAM instantiation -----
     blk_mem_gen_0 mem_inst (

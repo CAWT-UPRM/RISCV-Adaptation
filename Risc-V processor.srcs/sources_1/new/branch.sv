@@ -19,8 +19,8 @@ module branch (
     assign branch_target = pc + big_immediate; 
     assign jalr_target = (read_data1 + big_immediate) & ~32'b1;
 
-    assign branch_taken = (branch && 
-        ((beq && equal) || (bne && nequal) || (less && blt) || (greater && bge)));
+    assign branch_taken = ((branch && 
+        ((beq && equal) || (bne && nequal) || (less && blt) || (greater && bge))) || jal || jalr);
 
     assign next_pc = (jal ? branch_target : 
                     jalr ? jalr_target : 
