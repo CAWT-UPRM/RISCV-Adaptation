@@ -45,9 +45,9 @@ module RISCV_PIPELINED (
     logic [4:0] reg_dest_id_ex, reg1_id_ex, reg2_id_ex;
     logic [2:0] funct3_id_ex;
     logic [6:0] funct7_id_ex;
-    logic id_ex_flush; // Flush if branch is taken
+    logic id_ex_flush; 
 
-    assign id_ex_flush = ex_taken;
+    assign id_ex_flush = ex_taken || stall;
     
     logic [31:0] ex_next_pc;
 
@@ -59,7 +59,7 @@ module RISCV_PIPELINED (
     logic [31:0] ex_mem_link_address_reg;
 
     // Duplicate the 5-bit RD bus with max 16-sink clusters
-    (* DONT_TOUCH = "true" *)wire [4:0] ex_mem_rd_dup = ex_mem_reg_dest;
+    (* DONT_TOUCH = "true" *) wire [4:0] ex_mem_rd_dup = ex_mem_reg_dest;
 
     // Do the same for the write-enable bit if it has high fan-out
     (* DONT_TOUCH = "true" *) wire       ex_mem_regwrite_dup = ex_mem_regwrite;
@@ -93,6 +93,7 @@ module RISCV_PIPELINED (
 
     InstructionMemory im (
         .clk(clk),
+        .stall(stall),
         .instruction_address(pc), 
         .instruction(instruction)
     );
@@ -115,7 +116,7 @@ module RISCV_PIPELINED (
     IF_ID_reg if_id_reg (
         .clk(clk), 
         .reset(reset), 
-        .flush(ex_taken), // IF flush should happen
+        .flush(ex_taken), 
         .if_id_write(if_id_write), // Control signal to write to IF/ID register
         .pc(fetch_pc), 
         .instruction(instruction), 
@@ -132,12 +133,12 @@ module RISCV_PIPELINED (
 
 
     // Extracting the fields for readable signals
-    assign opcode = instruction_if_id[6:0]; // opcode bits
-    assign reg1 = instruction_if_id[19:15]; // rs1
-    assign reg2 = instruction_if_id[24:20]; // rs2
-    assign reg_dest = instruction_if_id[11:7]; // rd
-    assign funct3 = instruction_if_id[14:12]; // funct3 bits
-    assign funct7 = instruction_if_id[31:25]; // funct7 bits
+    assign opcode = instruction_if_id[6:0]; 
+    assign reg1 = instruction_if_id[19:15]; 
+    assign reg2 = instruction_if_id[24:20]; 
+    assign reg_dest = instruction_if_id[11:7]; 
+    assign funct3 = instruction_if_id[14:12]; 
+    assign funct7 = instruction_if_id[31:25]; 
 
     // Register file for reading data
     logic [31:0] data_read1, data_read2, data_read3;
@@ -148,8 +149,8 @@ module RISCV_PIPELINED (
         .read_reg1(reg1),
         .read_reg2(reg2),
         .read_reg3(reg_dest),
-        .write_reg(mem_wb_reg_dest), // added later in wb stage
-        .write_data(mem_wb_write_data), // added later in wb stage
+        .write_reg(mem_wb_reg_dest), 
+        .write_data(mem_wb_write_data),
         .reg_write_enable(mem_wb_regwrite),
         .read_data1(data_read1),
         .read_data2(data_read2),
@@ -201,7 +202,7 @@ module RISCV_PIPELINED (
     ID_EX_reg id_ex_reg (
         .clk(clk), 
         .reset(reset), 
-        .flush(id_ex_flush), // Flush if branch is taken
+        .flush(id_ex_flush),
         .branch(branch), 
         .beq(beq),
         .bne(bne),
@@ -254,7 +255,7 @@ module RISCV_PIPELINED (
         .reg_dest_id_ex(reg_dest_id_ex),
         
         // For store instructions
-        .reg1_id_ex(reg1_id_ex), // rs1 for store instructions
+        .reg1_id_ex(reg1_id_ex), 
         .reg2_id_ex(reg2_id_ex),
 
         // For R-type instructions
@@ -264,7 +265,6 @@ module RISCV_PIPELINED (
         .funct7_id_ex(funct7_id_ex)
     );
 
-    // Forwarding unit to handle data hazards
     logic [1:0] forward_a, forward_b, forward_c;
     Forward forwarding_unit ( 
         .id_ex_rs1(reg1_id_ex), 
@@ -367,7 +367,7 @@ module RISCV_PIPELINED (
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
         .alu_result(alu_result), 
-        .data_read2_id_ex(alu_operand2), // Data read 2 is the second ALU input
+        .data_read2_id_ex(alu_operand2), 
         .reg_dest_id_ex(reg_dest_id_ex), // Destination register for write back
         .ex_link_address(link_addr_ex1), // Link address for JALR
         .funct3(funct3_id_ex), // For store or load instructions

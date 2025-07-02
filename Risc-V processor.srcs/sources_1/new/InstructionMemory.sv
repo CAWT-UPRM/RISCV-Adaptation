@@ -5,6 +5,7 @@
 
 module InstructionMemory (
     input logic clk,
+    input logic stall,
     input logic [31:0] instruction_address, // program counter
     output logic [31:0] instruction
 );
@@ -14,10 +15,14 @@ module InstructionMemory (
     // address[9:2] shifts the address right by 2 bits, effectively dividing it by 4, which gives us the word index.
     
     logic [31:0] instruction_reg;
+    // Enable the memory only when not stalled
+    
+    logic stall_memory;
+    assign stall_memory = ~stall;
 
     Instruction_Memory im_inst(
         .clka(clk),
-        .ena(1'b1), // Enable the memory
+        .ena(stall_memory), // Enable the memory
         .addra(instruction_address[9:2]),
         .douta(instruction_reg)
     );

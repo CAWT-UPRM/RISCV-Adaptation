@@ -16,13 +16,13 @@ module PipelineTester;
         rst = 1'b1; // Start with reset high
         #20; 
         rst = 1'b0; 
-        #580000;
+        #700000;
         // Change this to our own path if you want to use it
-        // $display("Dumping data memory to memory_dump.hex");
-        // $writememh(
-        //     "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
-        //     processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
-        // );
+         $display("Dumping data memory to memory_dump.hex");
+        $writememh(
+             "C:/Users/pizar/RISCV-Adaptation/Risc-V processor.srcs/sources_1/memory_dump.hex",
+             processor.data_mem.mem_inst.inst.native_mem_module.blk_mem_gen_v8_4_9_inst.memory
+         );
         $finish;
     end
 endmodule
