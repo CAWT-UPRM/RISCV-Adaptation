@@ -7,6 +7,9 @@
 *.bin
 *.elf
 *.o
+*.jou
+*.log
+*.str
 
 # Keep important files
 !*.xpr
