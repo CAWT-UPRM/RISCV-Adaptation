@@ -47,6 +47,17 @@ module RISCV_PIPELINED (
     logic [6:0] funct7_id_ex;
     logic id_ex_flush; 
 
+    // Intermediate Register
+    logic [31:0] pc_ex2, instruction_ex2;
+    logic branch_ex2, beq_ex2, bne_ex2, blt_ex2, bge_ex2;
+    logic mem_read_ex2, memtoreg_ex2, mem_write_ex2, alu_src_ex2, reg_write_ex2, jal_ex2, jalr_ex2, auipc_ex2;
+    logic [1:0] alu_op_ex2;
+    logic [31:0] alu_result_ex2, data_read1_ex2, data_read2_ex2, data_read3_ex2;
+    logic [31:0] big_immediate_ex2, link_addr_ex2;
+    logic [4:0] reg1_ex2, reg2_ex2, reg_dest_ex2;
+    logic [2:0] funct3_ex2;
+    logic [6:0] funct7_ex2;
+
     assign id_ex_flush = ex_taken || stall;
     
     logic [31:0] ex_next_pc;
@@ -191,7 +202,9 @@ module RISCV_PIPELINED (
         .if_id_rs1(reg1), 
         .if_id_rs2(reg2), 
         .reg_dest_id_ex(reg_dest_id_ex), // From ID/EX stage
+        .reg_dest_ex2(reg_dest_ex2), 
         .id_ex_mem_read(id_ex_mem_read), // From ID/EX stage
+        .id_ex_mem_read2(mem_read_ex2), 
         .stall(stall), 
         .pc_write(pc_write), 
         .if_id_write(if_id_write)
@@ -272,8 +285,10 @@ module RISCV_PIPELINED (
         .id_ex_rs3(reg_dest_id_ex),
         .ex_mem_rd(ex_mem_rd_dup), 
         .mem_wb_rd(mem_wb_reg_dest), 
+        .ex2_rd(reg_dest_ex2),
         .ex_mem_reg_write(ex_mem_regwrite_dup), 
         .mem_wb_reg_write(mem_wb_regwrite),
+        .ex2_reg_write(reg_write_ex2),
         // Outputs  
         .forward_a(forward_a), 
         .forward_b(forward_b),
@@ -303,6 +318,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand1 = data_read1_id_ex; // No forwarding
             2'b01: alu_operand1 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand1 = ex_mem_alu_result; // Forward from EX/MEM stage
+            2'b11: alu_operand1 = alu_result_ex2; // Forward from EX2 stage
             default: alu_operand1 = data_read1_id_ex; // Default case
         endcase
 
@@ -310,6 +326,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand2 = data_read2_id_ex; // No forwarding
             2'b01: alu_operand2 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand2 = ex_mem_alu_result; // Forward from EX/MEM stage
+            2'b11: alu_operand2 = alu_result_ex2; // Forward from EX2 stage
             default: alu_operand2 = data_read2_id_ex; // Default case
         endcase
 
@@ -317,6 +334,7 @@ module RISCV_PIPELINED (
             2'b00: alu_operand3 = data_read3_id_ex; // No forwarding
             2'b01: alu_operand3 = mem_wb_write_data; // Forward from MEM/WB stage
             2'b10: alu_operand3 = ex_mem_alu_result; // Forward from EX/MEM stage 
+            2'b11: alu_operand3 = alu_result_ex2; // Forward from EX2 stage
             default: alu_operand3 = data_read3_id_ex; // Default case
         endcase
     end
@@ -338,18 +356,82 @@ module RISCV_PIPELINED (
     assign led = alu_result[0];
     assign link_addr_ex1 = pc_id_ex; // Link address for JALR, which is the next instruction address
 
+    // ------ EX1 / EX2 STAGE------
+    EX1_EX2_reg inter_reg (
+        .clk(clk),
+        .reset(reset),
+        .flush(ex_taken),
+        .pc_ex1(pc_id_ex),
+        .instruction_ex1(instruction_id_ex),
+        .zero_ex1(zero),
+        .ex1_branch(id_ex_branch),
+        .ex1_beq(id_ex_beq),
+        .ex1_bne(id_ex_bne),
+        .ex1_blt(id_ex_blt),
+        .ex1_bge(id_ex_bge),
+        .ex1_mem_read(id_ex_mem_read),
+        .ex1_memtoreg(id_ex_memtoreg),
+        .ex1_mem_write(id_ex_mem_write),
+        .ex1_alu_src(id_ex_alu_src),
+        .ex1_reg_write(id_ex_reg_write),
+        .ex1_jal(id_ex_jal),
+        .ex1_jalr(id_ex_jalr),
+        .ex1_auipc(id_ex_auipc),
+        .ex1_alu_op(id_ex_alu_op),
+        .alu_result_ex1(alu_result),
+        .link_addr_ex1(link_addr_ex1),
+        .data_read1_ex1(alu_operand1),
+        .data_read2_ex1(alu_operand2),
+        .data_read3_ex1(alu_operand3),
+        .big_immediate_ex1(big_immediate_id_ex),
+        .reg1_ex1(reg1_id_ex),
+        .reg2_ex1(reg2_id_ex),
+        .reg_dest_ex1(reg_dest_id_ex),
+        .funct3_ex1(funct3_id_ex),
+        .funct7_ex1(funct7_id_ex),
+
+        .pc_ex2(pc_ex2),
+        .instruction_ex2(instruction_ex2),
+        .zero_ex2(),
+        .ex2_branch(branch_ex2),
+        .ex2_beq(beq_ex2),
+        .ex2_bne(bne_ex2),
+        .ex2_blt(blt_ex2),
+        .ex2_bge(bge_ex2),
+        .ex2_mem_read(mem_read_ex2),
+        .ex2_memtoreg(memtoreg_ex2),
+        .ex2_mem_write(mem_write_ex2),
+        .ex2_alu_src(alu_src_ex2),
+        .ex2_reg_write(reg_write_ex2),
+        .ex2_jal(jal_ex2),
+        .ex2_jalr(jalr_ex2),
+        .ex2_auipc(auipc_ex2),
+        .ex2_alu_op(alu_op_ex2),
+        .alu_result_ex2(alu_result_ex2),
+        .link_addr_ex2(link_addr_ex2), // Link address for JALR
+        .data_read1_ex2(data_read1_ex2),
+        .data_read2_ex2(data_read2_ex2),
+        .data_read3_ex2(data_read3_ex2),
+        .big_immediate_ex2(big_immediate_ex2),
+        .reg1_ex2(reg1_ex2),
+        .reg2_ex2(reg2_ex2),
+        .reg_dest_ex2(reg_dest_ex2),
+        .funct3_ex2(funct3_ex2),
+        .funct7_ex2(funct7_ex2)
+    );
+
     branch branch_unit (
-        .pc(pc_id_ex), 
-        .read_data1(alu_operand1), 
-        .read_data2(alu_operand2),
-        .big_immediate(big_immediate_id_ex),
-        .branch(id_ex_branch), 
-        .beq(id_ex_beq),
-        .bne(id_ex_bne),
-        .blt(id_ex_blt),
-        .bge(id_ex_bge),
-        .jal(id_ex_jal), 
-        .jalr(id_ex_jalr), 
+        .pc(pc_ex2), 
+        .read_data1(data_read1_ex2), 
+        .read_data2(data_read2_ex2),
+        .big_immediate(big_immediate_ex2),
+        .branch(branch_ex2), 
+        .beq(beq_ex2),
+        .bne(bne_ex2),
+        .blt(blt_ex2),
+        .bge(bge_ex2),
+        .jal(jal_ex2), 
+        .jalr(jalr_ex2), 
         .next_pc(ex_next_pc),
         .branch_taken(ex_taken)
     );
@@ -360,17 +442,17 @@ module RISCV_PIPELINED (
     EX_MEM_reg ex_mem_reg (
         .clk(clk), 
         .reset(reset), 
-        .id_ex_mem_read(id_ex_mem_read),
-        .id_ex_mem_write(id_ex_mem_write),
-        .id_ex_memtoreg(id_ex_memtoreg), 
-        .id_ex_reg_write(id_ex_reg_write), 
-        .id_ex_jal(id_ex_jal), 
-        .id_ex_jalr(id_ex_jalr), 
-        .alu_result(alu_result), 
-        .data_read2_id_ex(alu_operand2), 
-        .reg_dest_id_ex(reg_dest_id_ex), // Destination register for write back
-        .ex_link_address(link_addr_ex1), // Link address for JALR
-        .funct3(funct3_id_ex), // For store or load instructions
+        .id_ex_mem_read(mem_read_ex2),
+        .id_ex_mem_write(mem_write_ex2),
+        .id_ex_memtoreg(memtoreg_ex2), 
+        .id_ex_reg_write(reg_write_ex2), 
+        .id_ex_jal(jal_ex2), 
+        .id_ex_jalr(jalr_ex2), 
+        .alu_result(alu_result_ex2), // ALU result
+        .data_read2_id_ex(data_read2_ex2), 
+        .reg_dest_id_ex(reg_dest_ex2), // Destination register for write back
+        .ex_link_address(link_addr_ex2), // Link address for JALR
+        .funct3(funct3_ex2), // For store or load instructions
 
         // Outputs
         .ex_mem_memread(ex_mem_memread),

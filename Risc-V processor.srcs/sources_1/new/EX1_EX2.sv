@@ -7,6 +7,7 @@ module EX1_EX2_reg (
     input logic [31:0] instruction_ex1,
     input logic zero_ex1,
     input logic ex1_branch,
+    input logic ex1_beq,
     input logic ex1_bne,    
     input logic ex1_blt,
     input logic ex1_bge,
@@ -35,6 +36,7 @@ module EX1_EX2_reg (
     output logic [31:0] instruction_ex2,
     output logic zero_ex2,
     output logic ex2_branch,
+    output logic ex2_beq,
     output logic ex2_bne,
     output logic ex2_blt,
     output logic ex2_bge,
@@ -61,10 +63,11 @@ module EX1_EX2_reg (
 );
 
     always_ff @(posedge clk or posedge reset) begin
-        if(reset || flush) begin
+        if (reset) begin
             pc_ex2 <= 32'b0;
-            instruction_ex2 <= 32'b0;
+            instruction_ex2 <= 32'h13;
             ex2_branch <= 1'b0;
+            ex2_beq <= 1'b0;
             ex2_bne <= 1'b0;
             ex2_blt <= 1'b0;
             ex2_bge <= 1'b0;
@@ -90,11 +93,28 @@ module EX1_EX2_reg (
             link_addr_ex2 <= 32'b0;
             zero_ex2 <= 1'b0;
 
+        end else if (flush) begin
+            
+            ex2_branch <= 1'b0;
+            ex2_beq <= 1'b0;
+            ex2_bne <= 1'b0;
+            ex2_blt <= 1'b0;
+            ex2_bge <= 1'b0;
+            ex2_mem_read <= 1'b0;
+            ex2_memtoreg <= 1'b0;
+            ex2_mem_write <= 1'b0;
+            ex2_alu_src <= 1'b0;
+            ex2_reg_write <= 1'b0;
+            ex2_jal <= 1'b0;
+            ex2_jalr <= 1'b0;
+            ex2_auipc <= 1'b0;
+
         end else begin
 
             pc_ex2 <= pc_ex1;
             instruction_ex2 <= instruction_ex1;
             ex2_branch <= ex1_branch;
+            ex2_beq <= ex1_beq;
             ex2_bne <= ex1_bne;
             ex2_blt <= ex1_blt;
             ex2_bge <= ex1_bge;

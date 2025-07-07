@@ -2,8 +2,8 @@
 module Hazard_Detection (
     input logic clk,
     input logic [4:0] if_id_rs1, if_id_rs2,
-    input logic [4:0] reg_dest_id_ex,
-    input logic id_ex_mem_read,
+    input logic [4:0] reg_dest_id_ex, reg_dest_ex2,
+    input logic id_ex_mem_read, id_ex_mem_read2,
 
     output logic stall, pc_write, if_id_write
 );
@@ -15,7 +15,7 @@ module Hazard_Detection (
         if_id_write = 1'b1;
 
         // Hazard detection logic
-        if (id_ex_mem_read && ((if_id_rs1 == reg_dest_id_ex) || (if_id_rs2 == reg_dest_id_ex) )) begin
+        if ((id_ex_mem_read || id_ex_mem_read2) && ((if_id_rs1 == reg_dest_id_ex) || (if_id_rs2 == reg_dest_id_ex) || (if_id_rs1 == reg_dest_ex2) || (if_id_rs2 == reg_dest_ex2) )) begin
             stall = 1'b1; // Stall the pipeline
             pc_write = 1'b0; // Disable PC write
             if_id_write = 1'b0; // Disable IF/ID write

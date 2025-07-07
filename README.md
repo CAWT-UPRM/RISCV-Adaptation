@@ -19,4 +19,4 @@ Designed for FPGA implementation (e.g., Basys3), the processor uses separate BRA
   - One BRAM each for instructions and data
 - **ELF Binary Integration**:
   - Use `riscv64-unknown-elf-gcc` to compile code into ELF
-  - Convert ELF to `.mem` files for BRAM loading via `$readmemh`
+  - Convert ELF to `.coe` files via the `riscv-toolchain` shell script
