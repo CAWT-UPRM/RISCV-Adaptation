@@ -6,11 +6,14 @@ module ALU_control (
    input logic alu_src,
    input logic funct7, // bit 30
    input logic funct7_mac, // bit 25 for mults
+
+   output logic is_mac,
    output logic [3:0] alu_control  
 );
     
     always_comb begin
         alu_control = 4'b0; // Default value
+        is_mac = 1'b0;
         case (alu_op)
             2'b00 : alu_control = 4'b0010; // forced addition for lw or sw
 
@@ -29,7 +32,10 @@ module ALU_control (
                         5'b00_010 : alu_control = 4'b0111; // slt
                         5'b00_011 : alu_control = 4'b1001; // sltu
                         5'b10_101 : alu_control = 4'b1010; // sra
-                        5'b01_000 : alu_control = 4'b1011; // mac (multiply and accumulate)
+                        5'b01_000 : begin
+                            is_mac = 1'b1; // MAC flag to enable operation
+                            alu_control = 4'b1011; // MAC                         
+                        end
                         5'b01_100 : alu_control = 4'b1100; // div
                         5'b01_101 : alu_control = 4'b1101; // rem
                         default: alu_control = 4'b0; // default case

@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="593,025.417 ns"></ZoomStartTime>
-      <ZoomEndTime time="593,142.918 ns"></ZoomEndTime>
-      <Cursor1Time time="593,035.000 ns"></Cursor1Time>
+      <ZoomStartTime time="470,305.700 ns"></ZoomStartTime>
+      <ZoomEndTime time="470,421.501 ns"></ZoomEndTime>
+      <Cursor1Time time="470,325.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="220"></NameColumnWidth>
-      <ValueColumnWidth column_width="93"></ValueColumnWidth>
+      <NameColumnWidth column_width="217"></NameColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="35" />
+   <WVObjectSize size="41" />
    <wave_markers>
       <marker time="92325000" label="" />
       <marker time="92345000" label="" />
@@ -53,6 +53,30 @@
    <wvobject fp_name="/PipelineTester/processor/id_ex_reg/instruction_id_ex" type="array">
       <obj_property name="ElementShortName">instruction_id_ex[31:0]</obj_property>
       <obj_property name="ObjectShortName">instruction_id_ex[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/result" type="array">
+      <obj_property name="ElementShortName">result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">result[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/result_dsp" type="array">
+      <obj_property name="ElementShortName">result_dsp[43:0]</obj_property>
+      <obj_property name="ObjectShortName">result_dsp[43:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/mac_inst/A" type="array">
+      <obj_property name="ElementShortName">A[24:0]</obj_property>
+      <obj_property name="ObjectShortName">A[24:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/mac_inst/B" type="array">
+      <obj_property name="ElementShortName">B[17:0]</obj_property>
+      <obj_property name="ObjectShortName">B[17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/mac_inst/C" type="array">
+      <obj_property name="ElementShortName">C[31:0]</obj_property>
+      <obj_property name="ObjectShortName">C[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/PipelineTester/processor/alu/mac_inst/P" type="array">
+      <obj_property name="ElementShortName">P[43:0]</obj_property>
+      <obj_property name="ObjectShortName">P[43:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/PipelineTester/processor/hazard_detection_unit/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>

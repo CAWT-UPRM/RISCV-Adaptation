@@ -284,6 +284,7 @@ module RISCV_PIPELINED (
     logic [3:0] alu_control;
     logic [31:0] alu_result;
     logic zero;
+    logic is_mac;
     logic [31:0] alu_input, alu_input2;
 
     ALU_control alu_control_unit (
@@ -292,6 +293,7 @@ module RISCV_PIPELINED (
         .alu_src(id_ex_alu_src), 
         .funct7(funct7_id_ex[5]), // For R-type instructions, bit 30
         .funct7_mac(funct7_id_ex[0]), // For mac, bit 25
+        .is_mac(is_mac),
         .alu_control(alu_control)
     );
 
@@ -324,14 +326,44 @@ module RISCV_PIPELINED (
     assign alu_input = id_ex_auipc ? pc_id_ex : alu_operand1; // Use PC if AUIPC is set
     assign alu_input2 = id_ex_alu_src ? big_immediate_id_ex: alu_operand2; // Use immediate if alu_src is set
     
+    logic [24:0] mac_input_a;
+    logic [17:0] mac_input_b;
+    logic [43:0] mac_result;
+    logic [31:0] mac_input3, ex_result;
+
+    always_comb begin
+        if (is_mac) begin 
+            // Prepare inputs if MAC
+            mac_input_a = alu_operand1[24:0]; 
+            mac_input_b = alu_operand2[17:0]; 
+            mac_input3 = alu_operand3; 
+        end else begin
+            // Not used in other operations
+            mac_input_a = 25'b0;
+            mac_input_b = 18'b0;
+            mac_input3 = 32'b0;
+        end
+    end
+
+    // DSP operations
+    // This dsp module is for MAC (Multiply and accumulate) instructions
+    // A * B + C = P
+    MAC_dsp mac_inst (
+        .A(mac_input_a),
+        .B(mac_input_b),
+        .C(mac_input3),
+        .P(mac_result)
+    );
+
     ALU alu (
         .a(alu_input), 
         .b(alu_input2), 
-        .c(alu_operand3),
         .alu_control(alu_control),
         .result(alu_result),
         .zero(zero) 
     );
+
+    assign ex_result = (is_mac) ? mac_result[31:0] : alu_result; // Use MAC result if MAC operation, otherwise use ALU result
 
     logic [31:0] link_addr_ex1;
 
@@ -366,7 +398,7 @@ module RISCV_PIPELINED (
         .id_ex_reg_write(id_ex_reg_write), 
         .id_ex_jal(id_ex_jal), 
         .id_ex_jalr(id_ex_jalr), 
-        .alu_result(alu_result), 
+        .alu_result(ex_result), // ALU result or MAC result
         .data_read2_id_ex(alu_operand2), 
         .reg_dest_id_ex(reg_dest_id_ex), // Destination register for write back
         .ex_link_address(link_addr_ex1), // Link address for JALR

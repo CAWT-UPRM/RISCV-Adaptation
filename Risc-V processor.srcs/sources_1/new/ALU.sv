@@ -2,24 +2,11 @@
 module ALU (
     input logic [31:0] a,          // First operand
     input logic [31:0] b,          // Second operand
-    input logic [31:0] c,
     input logic [3:0] alu_control, // ALU control signal
 
     output logic [31:0] result,    // ALU result
     output logic zero              // Zero flag
 );
-    // A new instruction could be used to store the accumulator or load it
-    logic [43:0] result_dsp;
-    
-    // DSP operations
-    // This dsp module is for MAC (Multiply and accumulate) instructions
-    // A * B + C = P
-    MAC_dsp mac_inst (
-        .A(a[24:0]),
-        .B(b[17:0]),
-        .C(c),
-        .P(result_dsp)
-    );
 
     always_comb begin
         unique case (alu_control)
@@ -33,7 +20,7 @@ module ALU (
             4'b0111: result = ($signed(a) < $signed(b)) ? 32'b1 : 32'b0; // Set less than
             4'b1001: result = (a < b) ? 32'b1 : 32'b0; // Set less than unsigned
             4'b1010: result = a >>> b[4:0]; // Shift right arithmetic
-            4'b1011: result = result_dsp[31:0]; // (MAC)
+            4'b1011: result = 32'b0;
             4'b1100: result = 32'b0; 
             4'b1101: result = 32'b0;
             
